@@ -55,6 +55,9 @@ do
     echo
 done
 
+# some commit messages may contain more than one of the selected keywords
+unique=$(sort -u commits.csv)
+echo "$unique" > commits.csv
 shuffled=$(shuf commits.csv)
 echo "$shuffled" > commits.csv
 
