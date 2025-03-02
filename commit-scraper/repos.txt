@@ -108,3 +108,5 @@ https://github.com/zhuzilin/dafny-exercises
 https://github.com/tecnicasilegais/MetodosFormais
 https://github.com/tatayu/CS5232_Project
 https://github.com/zhuzilin/dafny-exercises
+https://github.com/aws/aws-encryption-sdk
+https://github.com/Consensys/evm-dafny
