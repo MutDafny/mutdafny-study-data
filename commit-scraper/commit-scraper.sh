@@ -30,7 +30,7 @@ extract_commits_matching_pattern() {
             deletions=0
             for file in "${dafny_files[@]}"
             do
-                added_removed=$(git show --name-status $hash | grep -e "A\s*$file" -e "D\s*$file")
+                added_removed=$(git show --name-status $hash | grep -e "A\s*$file$" -e "D\s*$file$" -e "R.*\s*$file$")
                 if [[ -z $added_removed ]]; then # only count line insertions/deletions for files that weren't added or removed
                     file_insertions=$(git show --numstat $hash -- $file | tail -1 | awk '{print $1}')
                     file_deletions=$(git show --numstat $hash -- $file | tail -1 | awk '{print $2}')

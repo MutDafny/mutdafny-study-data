@@ -9,7 +9,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/fc3752004d4c421cf
 https://github.com/secure-foundations/ironsync-osdi2023/commit/35bd86c78cfc56890ddbe1803a9cf5522a5e7363 2 10 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/8942e861e8604beeeb9dab867c73520bc4c8d9b6 2 4 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/6023f1ff177261930d49985cf5369273ee3fbb26 3 87 9
-https://github.com/dafny-lang/libraries/commit/32974fc6a49769a42fb0ce1809d9d18c505f7483 15 3628 15
+https://github.com/dafny-lang/libraries/commit/32974fc6a49769a42fb0ce1809d9d18c505f7483 15 17 15
 https://github.com/jorge-jbs/TFG/commit/81e3ecec9d0b988f2256268c2168d9787c85a347 2 46 46
 https://github.com/secure-foundations/ironsync-osdi2023/commit/e18388e38bb8894c207a9aebbeb31c0f3f7d3022 3 33 11
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b4ca618a5ec61baf8d0fe73dcb7aa5a1d68ad277 1 1 0
@@ -67,7 +67,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/91cc471cfba3d655a
 https://github.com/secure-foundations/ironsync-osdi2023/commit/a52568fa036e533c9355583656f6d8ec78ac1d2d 1 3 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/07a4a30787c6b2eea61dfb673fc20bbf7c7df34e 1 0 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/e179880ab91d8af211172eaab8f99e0bbbd55c0e 3 82 64
-https://github.com/secure-foundations/ironsync-osdi2023/commit/4237d3a0240d8f677869abf613a9e83b6f4ac994 4 99 3
+https://github.com/secure-foundations/ironsync-osdi2023/commit/4237d3a0240d8f677869abf613a9e83b6f4ac994 4 62 3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/291dfd9ef2a15469d1a70c75cb0db01a00dfe4de 1 5 5
 https://github.com/wenhuizhang/summer-school-2020/commit/69d617ec7df7a45c8cc4300180e07abe6fa1c247 1 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/696778c31b3075f54af705d05e8d19260c612cbe 1 15 4
@@ -93,7 +93,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/3c8aa624756e62b91
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f5fe5d3e604745ae0d4ca69b0f22f125c441fdeb 1 3 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b84a328866d601b1a0d0125688833cd5c28f4d5f 1 5 5
 https://github.com/secure-foundations/ironsync-osdi2023/commit/c46197d34bd16e27b39b2d7014e2ad3c20f0b39a 2 27 53
-https://github.com/secure-foundations/ironsync-osdi2023/commit/fbf75fa9a79508df0019c156216445ab7bebb153 5 1250 20
+https://github.com/secure-foundations/ironsync-osdi2023/commit/fbf75fa9a79508df0019c156216445ab7bebb153 5 36 20
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d988ee03fd8db4a8c090f8ef11ee2762422da4ae 1 12 8
 https://github.com/secure-foundations/ironsync-osdi2023/commit/12dca2496ceea9b8ab0537f5971eabdafd86710a 5 98 74
 https://github.com/secure-foundations/ironsync-osdi2023/commit/e27b26cb56bf765898cd660f4351e4aeed194e1f 4 5 4
@@ -137,7 +137,7 @@ https://github.com/dafny-lang/libraries/commit/20d90ec43db21d224bb5db0020cc68a2d
 https://github.com/jorge-jbs/TFG/commit/bdebbd19ae661220a3af5912e495ec9fba484a42 2 8 8
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b7010886c9f9a208e215e973499d3b05da569d0b 1 31 25
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d9ec71e070bee29029e724b310c1e88fe96a5e69 1 1 0
-https://github.com/secure-foundations/ironsync-osdi2023/commit/1beb6f46e8035ee20f2d418b576627c1224f0929 3 1700 0
+https://github.com/secure-foundations/ironsync-osdi2023/commit/1beb6f46e8035ee20f2d418b576627c1224f0929 3 0 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/ebbdff4a4432a65077639efc0cd0a32b430c37e5 8 8 8
 https://github.com/secure-foundations/ironsync-osdi2023/commit/536a20227fbfb517221cc397b46a6125ad1fae52 1 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f22b254425f4daf43195b80b542828e587ac6a20 2 3 1
@@ -182,7 +182,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/6246993a9ea890ab3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/adb03704c362ab6a72f97ce1027b3766d23d8d6d 5 0 10
 https://github.com/secure-foundations/ironsync-osdi2023/commit/db36c6ea2c53fdc3ed33efbccc63001f738919c7 1 34 36
 https://github.com/volodeyka/veri-sparse/commit/f457c22dc6032c5b129d90140751031e53a41e02 1 0 95
-https://github.com/just-me-/dafny-language-server/commit/3c55c4a06976265e7ce74b60d169e6a70cfcc601 2 33 4
+https://github.com/just-me-/dafny-language-server/commit/3c55c4a06976265e7ce74b60d169e6a70cfcc601 2 8 4
 https://github.com/DanielCavalheiro/CVS-handout1/commit/ad5a5a7952a97609bba776fddf2e5a603c283e44 1 17 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/bb648cc13ab23fd282eeff912c87a65f43e844d7 1 95 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/0e8f96948399a4e42503111413e50c164ba3768b 2 14 1
@@ -213,7 +213,7 @@ https://github.com/volodeyka/veri-sparse/commit/e030e29e4b6a4f3e935a903785ee48f2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/1ac2d4b9033c41cb7c517aadfbbbb8537d1ed79a 3 13 5
 https://github.com/secure-foundations/ironsync-osdi2023/commit/7514a22b244d2638cf15c13309b2a637823d2a0e 3 18 12
 https://github.com/dafny-lang/libraries/commit/8b0c39969534dfdfb3b9fb4db777bf0cd97066a1 11 37 37
-https://github.com/jorge-jbs/TFG/commit/0b91e0612606681e962c1bcb284cbd55dda59f20 7 723 4
+https://github.com/jorge-jbs/TFG/commit/0b91e0612606681e962c1bcb284cbd55dda59f20 7 15 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/02b4cc49cb405f9aa78eae4dcef18690c923e25b 1 11 3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/908ad427acb92b8d135312cf5c9aa1d0efafa5fc 22 425 798
 https://github.com/secure-foundations/ironsync-osdi2023/commit/555d5df55588a656a5f426590b03dd3c2ac00736 1 3 3
@@ -228,7 +228,7 @@ https://github.com/dafny-lang/Dafny-VMC/commit/db270cf1a1532add2fec9097490b1d41a
 https://github.com/secure-foundations/ironsync-osdi2023/commit/dc15738309dc1513f729d024b41e5151443c066c 2 85 63
 https://github.com/secure-foundations/ironsync-osdi2023/commit/0001715e44767490270859e669db2f50b9581026 1 2 10
 https://github.com/secure-foundations/ironsync-osdi2023/commit/82a4e9600b92a4fe9824abb1ac2c079146dbd8cf 1 7 16
-https://github.com/just-me-/dafny-language-server/commit/e77e59162ea5bb5179ebba0a72c13095f0196748 1 44 0
+https://github.com/just-me-/dafny-language-server/commit/e77e59162ea5bb5179ebba0a72c13095f0196748 1 0 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/0df498502928368411609808a8030265fdd174ab 1 37 17
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b5ab26ae1b396a3cb6b8675967258aa5ebe11e4c 1 6 6
 https://github.com/secure-foundations/ironsync-osdi2023/commit/78d0f95f5e760d361e436754f4b9737165c19f2a 1 33 20
@@ -296,7 +296,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/2770437138962a586
 https://github.com/dafny-lang/libraries/commit/ee4aeaf3b0fda61f5ac0da6d38610dcb74d78050 3 26 5
 https://github.com/jorge-jbs/TFG/commit/d545dd0795ccbe80a424c8e3b2e4ba0a2c704be2 1 65 5
 https://github.com/secure-foundations/ironsync-osdi2023/commit/c942f3f27edb5fa4f4a0d5cc7f6c12d94085baf3 2 11 5
-https://github.com/secure-foundations/ironsync-osdi2023/commit/ea3c36bb78ea7f67ed099946ce8bea785393e43b 54 16415 15
+https://github.com/secure-foundations/ironsync-osdi2023/commit/ea3c36bb78ea7f67ed099946ce8bea785393e43b 54 15 15
 https://github.com/guilhermeolivsilva/dafny-mini-project/commit/cc49c0b2455733c0cf0b5b147346d605586b2f8c 1 6 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f93bf9ca2ef08412319ceded4bb932546ac32cfe 1 2 0
 https://github.com/dafny-lang/libraries/commit/4e62b95d9ad8128902e82421031e18ff6bf846ad 4 6 6
@@ -385,7 +385,7 @@ https://github.com/aws/aws-encryption-sdk/commit/7ae3a1097ce91c529621384829d8d2f
 https://github.com/Consensys/evm-dafny/commit/e8d1094248ef5319e2ef3c84609021218e91d98c 1 2 2
 https://github.com/Consensys/evm-dafny/commit/5437800c2ef542aa2ab666a8ff90dcd5f7532b2e 2 14 12
 https://github.com/Consensys/evm-dafny/commit/af7d6df97d2a7be67ad00892370623c5623127e9 2 16 13
-https://github.com/Consensys/evm-dafny/commit/cb6a5403516c9ba26735eef61fa3e17bce45d5d3 6 56 0
+https://github.com/Consensys/evm-dafny/commit/cb6a5403516c9ba26735eef61fa3e17bce45d5d3 6 0 0
 https://github.com/Consensys/evm-dafny/commit/27939cef0e89c9235605f774285fed899b6e2be0 1 3 0
 https://github.com/Consensys/evm-dafny/commit/6d7e9f70f13d2acd32d9b58db7bbaeb87bad5b28 4 41 30
 https://github.com/Consensys/evm-dafny/commit/78bbfe87399f6756b5691e82449687f6359b533a 1 4 3
@@ -419,7 +419,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/b1c52cba4ba0039cc
 https://github.com/secure-foundations/ironsync-osdi2023/commit/38902d56071298fb9290270e2a7214786986177a 1 4 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/e1c728323bcc271f4103e5818b0a34759397180d 4 87 114
 https://github.com/secure-foundations/ironsync-osdi2023/commit/a7b5dcb462d63d679bc90e7a4c6a1ef378376033 3 50 38
-https://github.com/secure-foundations/ironsync-osdi2023/commit/a541f667a0b29fc06b163c8ae2aa345d8ec965c7 3 2372 171
+https://github.com/secure-foundations/ironsync-osdi2023/commit/a541f667a0b29fc06b163c8ae2aa345d8ec965c7 3 173 171
 https://github.com/TonyZhangND/paxos_proof/commit/19ba40a6265cf9116a120bf0b6e85b850bbd8497 4 50 9
 https://github.com/secure-foundations/ironsync-osdi2023/commit/df5090f7f65b9b9c10ced99847ad03400b51674b 2 99 16
 https://github.com/secure-foundations/ironsync-osdi2023/commit/1d82f4b7244e68ca3334da227f303c9887335f8e 1 0 1
@@ -444,7 +444,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/d914f6fed49c11163
 https://github.com/monadius/dafny_examples/commit/a99a62f3fd1a1122b01361a58b8b8fb013912719 2 6 4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/779a17dc063d18cfd34846e9f55820d39869e382 1 3 1
 https://github.com/just-me-/dafny-language-server/commit/19e6e77c59b26d35123693bd88521ebbab1a0712 1 10 10
-https://github.com/just-me-/dafny-language-server/commit/03304845b1edba8fcbc0769052b5adea2ba36c64 9 115 0
+https://github.com/just-me-/dafny-language-server/commit/03304845b1edba8fcbc0769052b5adea2ba36c64 9 0 0
 https://github.com/guilhermeolivsilva/dafny-mini-project/commit/72c58755dbad5e05c62ded17edaec36e56aef5ec 1 27 13
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d04798b07472588811bec76ebffce601583c4d35 1 9 9
 https://github.com/secure-foundations/ironsync-osdi2023/commit/9420f923c31e13564ddf0f740ae27ac439f40936 3 68 7
@@ -462,11 +462,11 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/851488f7a48ab892b
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f7164168579e8bebf04fb5fb303639cf9471c56c 1 30 33
 https://github.com/benreynwar/SiLemma/commit/f9f945065978547d06f8c17096548d5b5fb825ff 18 233 203
 https://github.com/secure-foundations/ironsync-osdi2023/commit/193a3500669526b6fffb734e1b8b3ddf38810478 3 11 4
-https://github.com/secure-foundations/ironsync-osdi2023/commit/bf6db6f9118d06540c55bd694136d0345e1412a8 68 6136 99
+https://github.com/secure-foundations/ironsync-osdi2023/commit/bf6db6f9118d06540c55bd694136d0345e1412a8 68 99 99
 https://github.com/secure-foundations/ironsync-osdi2023/commit/3aad973c35b3b3caede1f88fd5339a3f8a90e219 3 201 12
 https://github.com/secure-foundations/ironsync-osdi2023/commit/dc22fa0e4723f6d04a316ad28cf28e6e01b87d98 5 16 7
 https://github.com/secure-foundations/ironsync-osdi2023/commit/3d27c7cc882990cfb84379c86df6c8d46294cd34 11 72 691
-https://github.com/secure-foundations/ironsync-osdi2023/commit/4902f4d4c0e4a576d576cbbea6385dc2876d4952 11 1920 15
+https://github.com/secure-foundations/ironsync-osdi2023/commit/4902f4d4c0e4a576d576cbbea6385dc2876d4952 11 315 15
 https://github.com/secure-foundations/ironsync-osdi2023/commit/e3b43874579f7dc136562cc5db8c22fef27aebca 1 4 19
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b39913edfd30ee872d26dc3729b6afc88f4a33e0 1 8 3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/70fe5f5fa338a79606bf2ba4979f7e29cce4b43c 1 1 0
@@ -574,8 +574,8 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/66a1b9adebf9497fc
 https://github.com/guimath/BPTree-verif/commit/f999deebd662765994c5399517201eae0975b036 1 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/abf18b9dfe494676b6f8db86960e620a418c0d1f 1 6 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/60dbf862f4db537f4d3a3c2074f746a75661a52f 3 26 6
-https://github.com/secure-foundations/ironsync-osdi2023/commit/4a17ff21a0274b5022571eeec47107eff8881f0f 2 220 30
-https://github.com/secure-foundations/ironsync-osdi2023/commit/58e21d57a8d32565cc63b14da54f87c1031bf201 9 27 8
+https://github.com/secure-foundations/ironsync-osdi2023/commit/4a17ff21a0274b5022571eeec47107eff8881f0f 2 30 30
+https://github.com/secure-foundations/ironsync-osdi2023/commit/58e21d57a8d32565cc63b14da54f87c1031bf201 9 8 8
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d64549b8d8300e3676feb7bf5b4ce5667df32c66 1 11 3
 https://github.com/jorge-jbs/TFG/commit/e17d11d01ea90420d5a011a18e8ad39f49aa5694 1 3 11
 https://github.com/secure-foundations/ironsync-osdi2023/commit/ab9d692e8975d51280cdba240fe457e0e572c732 2 10 4
@@ -677,7 +677,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/70b7036df5e150881
 https://github.com/dafny-lang/libraries/commit/89c93ca2a550d5f032af39238f61425478490af9 1 2 2
 https://github.com/juletx/MFDS/commit/259edbf880a1b1ff23365035ed1b0051c23e93f0 1 0 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/51555a544f80f62dfc236b437f46e0a4eef0f4ef 1 107 43
-https://github.com/eligoldweber/specTesting/commit/900d0fa4037e6f03e3019312f240f076c8d12ca5 1 63 0
+https://github.com/eligoldweber/specTesting/commit/900d0fa4037e6f03e3019312f240f076c8d12ca5 1 0 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/7943421330450bfbaf03109fbf7035a77117f47e 2 7 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/16211236f4f2b16fa452a1d2c97b7b52a4cc1009 1 17 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/2ee5ea9b1dd63692c36eb28053d4f2f5d375ba06 2 35 5
@@ -710,9 +710,9 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/c5f64765576a87767
 https://github.com/secure-foundations/ironsync-osdi2023/commit/6e5fe1ab69230429e877572b6da916f33a7146b5 2 71 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/df7edd83a205606edb0b819b00c87233c491426a 1 14 18
 https://github.com/secure-foundations/ironsync-osdi2023/commit/531e6dc7eabca32b7c210902b3fadc7e5ef1b40a 5 22 22
-https://github.com/eligoldweber/specTesting/commit/043298c746dee81ad29bd2dfa46e21bb870e5eb8 2 38 0
+https://github.com/eligoldweber/specTesting/commit/043298c746dee81ad29bd2dfa46e21bb870e5eb8 2 0 0
 https://github.com/dafny-lang/libraries/commit/e41d57f0259c00093f6be3b35ad81da85d688a0a 2 3 3
-https://github.com/aws/aws-encryption-sdk/commit/b9aac16c41a17bfed0762210f3dda02012338d31 5 842 69
+https://github.com/aws/aws-encryption-sdk/commit/b9aac16c41a17bfed0762210f3dda02012338d31 5 69 69
 https://github.com/Consensys/evm-dafny/commit/b05bff7253ed0fbfac0efceb2922b3acfc906e08 1 0 0
 https://github.com/Consensys/evm-dafny/commit/5326b088ed62ca67fa77e0e66302a1d79539a0b5 1 2 2
 https://github.com/Consensys/evm-dafny/commit/ee89a8100e7777032e5647da914fd3d41bfd0d6f 1 6 6
@@ -763,7 +763,7 @@ https://github.com/Consensys/evm-dafny/commit/4dbb387069117c3e3476d3038039ef7c8f
 https://github.com/aws/aws-encryption-sdk/commit/c4c57596152f64ded891f9cc794c659ce4c85c21 1 3 13
 https://github.com/Consensys/evm-dafny/commit/65bce7c46767220609aab38540ef801b286d79f7 1 4 3
 https://github.com/aws/aws-encryption-sdk/commit/10fb2a4c374c9289b8a32c6871b9f9aedcf588ca 9 17 16
-https://github.com/aws/aws-encryption-sdk/commit/c22135373ecbb36cd0dfe7ba70180964c44ecf05 3 1304 39
+https://github.com/aws/aws-encryption-sdk/commit/c22135373ecbb36cd0dfe7ba70180964c44ecf05 3 37 39
 https://github.com/Consensys/evm-dafny/commit/dab1c8104e3e153a4a3ca28b6af30d73bc47a093 2 6 2
 https://github.com/aws/aws-encryption-sdk/commit/5c57488c0c09d221ce4e9617476cc44f1aa3781a 5 136 146
 https://github.com/aws/aws-encryption-sdk/commit/522f26b82df89b61c8a7f64e32e9e509c8694eef 1 33 27
@@ -852,7 +852,7 @@ https://github.com/guimath/BPTree-verif/commit/ba7db4ec49a295e3c4614d70dc11a9c2a
 https://github.com/secure-foundations/ironsync-osdi2023/commit/471e14b05622526537466b186369d2cdba586126 1 19 18
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d407990dbe91210602bd23a951ad36b4c57fbce8 3 24 23
 https://github.com/benreynwar/SiLemma/commit/eac70fd7fcece9aaa997a78912cd1851fa57f85a 1 501 2
-https://github.com/dafny-lang/libraries/commit/b124155439abcd5c5de63b4b21d73afcf04f4aaf 2 1 1
+https://github.com/dafny-lang/libraries/commit/b124155439abcd5c5de63b4b21d73afcf04f4aaf 2 10 36
 https://github.com/secure-foundations/ironsync-osdi2023/commit/79cad3f119b02926923860c2a47991cfbb08ee2b 1 1 5
 https://github.com/secure-foundations/ironsync-osdi2023/commit/77c97b43d94a21ec7091fdaf3b9b9d38f309f5b6 1 11 27
 https://github.com/Zyfarok/fv2020-tms/commit/8ba7880e4cb0cf062bd5c4d7b7e11963a6657d2f 1 32 37
@@ -946,7 +946,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/0bf4fc70523446b55
 https://github.com/jorge-jbs/TFG/commit/a2cc20d99f69eb92ce34491ab47b86fe8420fec2 3 56 53
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d420193664438e8adbae708c0c67ae7b6d11a5c3 1 15 6
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d84e4d4bac0046a1879c2d7c5b0ad18ea718de1c 1 1 1
-https://github.com/StephRMcIntyre/cs245-verification/commit/745f64c8bc89ea07d7c569d19ce227a0f93d4e73 2 21 1
+https://github.com/StephRMcIntyre/cs245-verification/commit/745f64c8bc89ea07d7c569d19ce227a0f93d4e73 2 1 1
 https://github.com/ayush268/Invoker/commit/cc275ebbc9ef31a0e9d39bb00ec450ea021dfdcd 1 10 0
 https://github.com/namin/dafny-sandbox/commit/d007d368b9bd0082ba48b4f2104346469599b4cb 1 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/a49bd870f5d75d2dff30a2aad5017195aad81871 3 11 1
@@ -959,7 +959,7 @@ https://github.com/Consensys/dafny-training/commit/d4e05717dfaf26f0e0b9ca266cc68
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f8a0a7c0896e97e9dd26bf086c2765d1c2e88e9a 3 36 26
 https://github.com/secure-foundations/ironsync-osdi2023/commit/ddb4a81094f7fb7b98a6987d1c9c575726021305 2 28 13
 https://github.com/guimath/BPTree-verif/commit/0c2bda6796a834e2d20ed1183172f151eea4762f 1 3 8
-https://github.com/secure-foundations/ironsync-osdi2023/commit/2f7efa62260c5b04a758ed4e5ff5c2067e642a1f 1 552 0
+https://github.com/secure-foundations/ironsync-osdi2023/commit/2f7efa62260c5b04a758ed4e5ff5c2067e642a1f 1 0 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/c063705bde93ff8a91a8c141526098452d9dccfb 1 10 0
 https://github.com/secure-foundations/ironsync-osdi2023/commit/82b43f96e753f811df793ca57f65b26dd33d4398 3 13 5
 https://github.com/secure-foundations/ironsync-osdi2023/commit/4af5970fad7302a6483f1a515f7effc6a5df532e 1 2 0
@@ -977,7 +977,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/3b2a99ea939e369b4
 https://github.com/secure-foundations/ironsync-osdi2023/commit/544751aacd37e4c7979ebbc228ce7eccb3cd19aa 2 10 24
 https://github.com/secure-foundations/ironsync-osdi2023/commit/77684a9cedc88a010dc51e018fd5cec5668bdbc1 1 11 3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/53e5da58c0dbbe2ffafe4c75e01aaaf81df6de6c 1 1 2
-https://github.com/secure-foundations/ironsync-osdi2023/commit/a94738013831e9e12ca6fd41248a685e4332ac66 3 306 3
+https://github.com/secure-foundations/ironsync-osdi2023/commit/a94738013831e9e12ca6fd41248a685e4332ac66 3 3 3
 https://github.com/StephRMcIntyre/cs245-verification/commit/8b11816016c002721e2b95956f218002031e8539 2 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/40cc5d2802f1de9b72444159345c2afe5c902184 2 163 19
 https://github.com/boaz23/assertive-programming-assignment-1/commit/adb6b901dce06cd35ae858926819326585b77256 3 11 4
@@ -993,7 +993,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/4a81dbc9014356499
 https://github.com/secure-foundations/ironsync-osdi2023/commit/6d5268d3a3600d45ff1a60579bbe9e50860c1c67 3 14 22
 https://github.com/secure-foundations/ironsync-osdi2023/commit/fb3091b9d08475bb0eb31971d11dc3882e84c602 1 20 13
 https://github.com/secure-foundations/ironsync-osdi2023/commit/0d223c73e4b66e6e75245d246bcda779dbcf115e 1 40 4
-https://github.com/secure-foundations/ironsync-osdi2023/commit/fc2034d891cdcc8baa0171398ebcb94f2526477d 28 564 66
+https://github.com/secure-foundations/ironsync-osdi2023/commit/fc2034d891cdcc8baa0171398ebcb94f2526477d 28 66 66
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d98f41cd76546108ebd730bdc5336dd6468acdf5 2 1 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/0ce700ce2885d6fffc44f61e7cf8ee106d9b8688 1 63 75
 https://github.com/secure-foundations/ironsync-osdi2023/commit/834a52fa06b5fb0c786ca7ff785b75f45c129b57 39 110 110
@@ -1013,7 +1013,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/702cb66c829257363
 https://github.com/secure-foundations/ironsync-osdi2023/commit/408a8507db06b83efa03ed2aa8cc297b6092f23c 2 46 62
 https://github.com/secure-foundations/ironsync-osdi2023/commit/16882ad2e8dbe835138a9629a9fa8e727e9a8001 2 3 3
 https://github.com/secure-foundations/ironsync-osdi2023/commit/b2c54c2e7538d9608d772db334eafb78b0def876 1 1 0
-https://github.com/dafny-lang/Dafny-VMC/commit/59ca4bf1ae79f72e4be502032f00f7ce03338d98 22 425 95
+https://github.com/dafny-lang/Dafny-VMC/commit/59ca4bf1ae79f72e4be502032f00f7ce03338d98 22 78 95
 https://github.com/secure-foundations/ironsync-osdi2023/commit/6d8e96cf1248f61ddc5ad517386559f7c28ff94a 1 3 6
 https://github.com/secure-foundations/ironsync-osdi2023/commit/7929a07487357da1a576824bf7b64f72a04cedcf 1 36 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/d95eba27734eb6aac7d70cc35dd08614367a8e27 1 2 2
@@ -1082,7 +1082,7 @@ https://github.com/secure-foundations/ironsync-osdi2023/commit/b81f38bf30f3ba844
 https://github.com/secure-foundations/ironsync-osdi2023/commit/f5f9164dc83946cf8484a9b1a871a56fdc47ed60 1 2 2
 https://github.com/secure-foundations/ironsync-osdi2023/commit/9fab77f68a51ce8dff1275b4061d3b8a87bc0ffb 3 10 1
 https://github.com/secure-foundations/ironsync-osdi2023/commit/28dc2e7a8058422b86400c9ef552e7f5a207e4ec 1 6 5
-https://github.com/dafny-lang/libraries/commit/6edd8402c8eb957c48959bdb75a2a49fdfe123d9 18 1078 1096
+https://github.com/dafny-lang/libraries/commit/6edd8402c8eb957c48959bdb75a2a49fdfe123d9 18 1089 1104
 https://github.com/secure-foundations/ironsync-osdi2023/commit/403ad1450fc93a9b509649a685a9432064205515 2 126 93
 https://github.com/secure-foundations/ironsync-osdi2023/commit/34a5ced7d1b9f36b60a4beb3b41aa5c1f1ef89e7 15 96 80
 https://github.com/secure-foundations/ironsync-osdi2023/commit/7548b89869ed6ad8f3aed237043f179c459e7960 13 52 52
@@ -1144,21 +1144,21 @@ https://github.com/Consensys/evm-dafny/commit/cb43d47c72cc3522119247404b9e602200
 https://github.com/Consensys/evm-dafny/commit/62d64b93923d31801747c6c7a6b13bfa492c72ea 1 1 1
 https://github.com/aws/aws-encryption-sdk/commit/3c0df96e01d8d6bfb88dbc50fe9179836e821bb9 2 14 20
 https://github.com/aws/aws-encryption-sdk/commit/fbb33924f7ab95d4fcb7317fc6eb693e7e4c295e 1 11 5
-https://github.com/Consensys/evm-dafny/commit/3b7239383efe1ec835d86b1abc858b41cb13401a 1 468 0
+https://github.com/Consensys/evm-dafny/commit/3b7239383efe1ec835d86b1abc858b41cb13401a 1 0 0
 https://github.com/aws/aws-encryption-sdk/commit/ff7f001d7a63a1bd0dad4686524610d3b9a79586 5 426 52
 https://github.com/Consensys/evm-dafny/commit/a4af1a1b03489938fee530d54b72454d7bab8002 5 112 60
 https://github.com/Consensys/evm-dafny/commit/cb09575119909f1b6fdd77a555f0796354f1022f 1 11 10
 https://github.com/aws/aws-encryption-sdk/commit/c3cfb9ab5d8bb46a4454d646b9636f12bf0d92f4 7 139 15
 https://github.com/Consensys/evm-dafny/commit/bf9c9dc5e0e7c60e2f9f66c38830f62c426f7f68 1 27 29
 https://github.com/aws/aws-encryption-sdk/commit/f9da4ce55880f6894be89f5f0b80863b96346c08 5 129 74
-https://github.com/aws/aws-encryption-sdk/commit/d25ec3ebcce75b76900ed6621a77454b487fdbb4 2 3611 0
+https://github.com/aws/aws-encryption-sdk/commit/d25ec3ebcce75b76900ed6621a77454b487fdbb4 2 0 0
 https://github.com/aws/aws-encryption-sdk/commit/bd573511d1ba18b722a3985fa9a51ded3e10d665 1 2 2
 https://github.com/aws/aws-encryption-sdk/commit/933e6cd233535a785404af72ad95cb449e075db1 1 51 56
 https://github.com/Consensys/evm-dafny/commit/9957934ff154d88af5aa957fee15f296339bba04 1 7 6
 https://github.com/Consensys/evm-dafny/commit/2406ba1b8662f61b44e9a6f58e731409e92a557b 1 12 4
 https://github.com/aws/aws-encryption-sdk/commit/c2577edb002fbf6a76033b0026e683e1d75fb967 39 0 0
 https://github.com/aws/aws-encryption-sdk/commit/4628b3372ed0c0fc0e49a487a320c8e132a3dba0 1 16 4
-https://github.com/Consensys/evm-dafny/commit/37a8d7c288377d56d625e245c5b8e15b86f42cae 1 468 0
+https://github.com/Consensys/evm-dafny/commit/37a8d7c288377d56d625e245c5b8e15b86f42cae 1 0 0
 https://github.com/Consensys/evm-dafny/commit/91743bf0f388699aa28ddeebb212963eb33ac78b 1 75 20
 https://github.com/aws/aws-encryption-sdk/commit/ef02a60318a9d68e3986207170be7ad336ecb95f 3 3 208
 https://github.com/Consensys/evm-dafny/commit/6a68699ba86d803d9fcc709c2e0d8b143de21a53 1 20 20
