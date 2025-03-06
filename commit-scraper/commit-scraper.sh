@@ -22,11 +22,25 @@ extract_commits_matching_pattern() {
     for commit in "${commits[@]}"
     do
         hash=$(echo $commit | sed 's/commit //g')
-        dafny_files=$(git show --name-only $hash | grep .dfy&)
-        if [[ -n $dafny_files ]]; then # only save commits that change dafny files
+        readarray -t dafny_files < <(git show --name-only $hash | grep -o ".*\.dfy$")
+        if (( ${#dafny_files[@]} )); then # only save commits that change dafny files
+            count_ref=$((count_ref + 1)) # track commits containing keyword
+            # track changes in each commit
+            insertions=0
+            deletions=0
+            for file in "${dafny_files[@]}"
+            do
+                added_removed=$(git show --name-status $hash | grep -e "A\s*$file" -e "D\s*$file")
+                if [[ -z $added_removed ]]; then # only count line insertions/deletions for files that weren't added or removed
+                    file_insertions=$(git show --numstat $hash -- $file | tail -1 | awk '{print $1}')
+                    file_deletions=$(git show --numstat $hash -- $file | tail -1 | awk '{print $2}')
+                    insertions=$((insertions + file_insertions))
+                    deletions=$((deletions + file_deletions))
+                fi
+            done
+
             commit_url="${repo_url}/commit/${hash}"
-            echo $commit_url >> ../commits.csv
-            count_ref=$((count_ref + 1))
+            echo $commit_url ${#dafny_files[@]} $insertions $deletions >> ../commits.csv
         fi
     done
 }
@@ -47,7 +61,7 @@ do
     extract_commits_matching_pattern "updat" $repo_url update_commits
     extract_commits_matching_pattern "chang" $repo_url change_commits
     scraped_repos=$((scraped_repos + 1))
-    echo $scraped_repos / 110 extracted
+    echo $scraped_repos / 112 extracted
 
     cd ..
     echo Removing $repo_name
@@ -55,7 +69,6 @@ do
     echo
 done
 
-# some commit messages may contain more than one of the selected keywords
 unique=$(sort -u commits.csv)
 echo "$unique" > commits.csv
 shuffled=$(shuf commits.csv)
