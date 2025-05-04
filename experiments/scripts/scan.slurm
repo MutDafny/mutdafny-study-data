@@ -27,6 +27,13 @@ mkdir ../mutants/timed-out
 mkdir ../mutants/killed
 mkdir ../data
 touch ../data/programs-mutation-data.csv
+touch ../data/mutants-data.csv
+
+num_mutant_entries=$(cat ../data/mutants-data.csv | wc -l)
+if [[ $num_mutant_entries -eq 0 ]]; 
+then
+    echo file op total_mut_time parse_time plugin_time res_time verif_time status > ../data/mutants-data.csv
+fi 
 
 # --------------------------------------------------------------------
 # Scan program for mutation targets

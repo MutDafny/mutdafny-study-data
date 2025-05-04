@@ -4,6 +4,7 @@ DIR=$(cd "$(dirname "$0")" && pwd)
 cd "$DIR" &> /dev/null
 rm commits.csv
 touch commits.csv
+echo url num_files insertions deletions > commits.csv
 
 scraped_repos=0
 fix_commits=0

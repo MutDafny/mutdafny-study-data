@@ -17,6 +17,9 @@ rm ../data/programs-mutation-data.csv
 touch ../data/programs-mutation-data.csv
 rm ../data/mutants-data.csv
 touch ../data/mutants-data.csv
+
+echo program total_scan_time parse_time plugin_time res_time verif_time num_targets num_killed num_alive num_time_out num_inv > ../data/programs-mutation-data.csv
+echo file op total_mut_time parse_time plugin_time res_time verif_time status > ../data/mutants-data.csv
 # --------------------------------------------------------------------
 
 scan_args="$*"

@@ -24,6 +24,7 @@ echo Finished all jobs
 # Extract data
 # --------------------------------------------------------------------
 touch complete_data.csv
+echo program total_scan_time parse_time plugin_time res_time verif_time num_targets num_killed num_alive num_time_out num_inv > complete_data.csv
 
 readarray -t entries < ../data/programs-mutation-data.csv
 for entry in "${entries[@]}" 
