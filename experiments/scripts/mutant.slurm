@@ -3,7 +3,7 @@
 #SBATCH -c 1
 #SBATCH --time=0:05:00
 #SBATCH --mem=100M
-#SBATCH --output=mutant_%A_%a.out
+#SBATCH --output=../logs/mutant_%A_%a.out
 
 if [[ -z $program ]]; then
     echo Usage: sbatch --export=program=program_file mutant.slurm
@@ -19,13 +19,8 @@ if [ -z "$SLURM_ARRAY_TASK_COUNT" ]; then
 fi
 
 
-MUTDAFNY_DIR=../../../mutdafny
-mkdir ../mutants
-mkdir ../mutants/alive
-mkdir ../mutants/timed-out
-mkdir ../mutants/killed
-mkdir ../data
-touch ../data/mutants-data.csv
+MUTDAFNY_DIR=../../../../mutdafny
+touch ../../data/mutants-data.csv
 IFS=','
 
 # --------------------------------------------------------------------
@@ -49,7 +44,7 @@ then
     mkdir $mutant_file_name # move job to dir isolated from remaining jobs
     cd $mutant_file_name
     cp ../helpers.txt ./
-    output=$({ time dotnet ../$MUTDAFNY_DIR/dafny/Binaries/Dafny.dll verify ../$program \
+    output=$({ time dotnet ../$MUTDAFNY_DIR/dafny/Binaries/Dafny.dll verify ../../$program \
         --allow-warnings --solver-path ../$MUTDAFNY_DIR/dafny/Binaries/z3 \
         --plugin ../$MUTDAFNY_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll,"mut $pos $op"; } 2>&1)
 else
@@ -59,7 +54,7 @@ else
     mkdir $mutant_file_name # move job to dir isolated from remaining jobs
     cd $mutant_file_name
     cp ../helpers.txt ./
-    output=$({ time dotnet ../$MUTDAFNY_DIR/dafny/Binaries/Dafny.dll verify ../$program \
+    output=$({ time dotnet ../$MUTDAFNY_DIR/dafny/Binaries/Dafny.dll verify ../../$program \
         --allow-warnings --solver-path ../$MUTDAFNY_DIR/dafny/Binaries/z3 \
         --plugin ../$MUTDAFNY_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll,"mut $pos $op $arg"; } 2>&1)
 fi
@@ -82,15 +77,15 @@ else
     output_dir=""
     if [[ -n $timed_out ]]; then
         echo Verification timed out
-        output_dir=../../mutants/timed-out
+        output_dir=../../../mutants/timed-out
         status="T"
     elif [[ -n $verified ]]; then
         echo Verification succeeded: mutant is alive
-        output_dir=../../mutants/alive
+        output_dir=../../../mutants/alive
         status="A"
     else
         echo Verification failed: mutant was killed
-        output_dir=../../mutants/killed
+        output_dir=../../../mutants/killed
         status="K"
     fi
     mv $mutant_file_name_with_ext $output_dir
@@ -103,8 +98,7 @@ if [[ -n $verification_finished ]]; then
     verification_time=$(cat elapsed-time.txt | sed -n '4p' | awk '{print $3}')
     echo $mutant_file_name_with_ext $op $total_mutation_time $parsing_time $plugin_time $resolution_time $verification_time $status
     ( flock -x 200
-    echo $mutant_file_name_with_ext $op $total_mutation_time $parsing_time $plugin_time $resolution_time $verification_time $status >> ../../data/mutants-data.csv
-    ) 200>>../../data/mutants-data.csv
+    echo $mutant_file_name_with_ext $op $total_mutation_time $parsing_time $plugin_time $resolution_time $verification_time $status >> ../../../data/mutants-data.csv
+    ) 200>>../../../data/mutants-data.csv
 fi
-cd ..
-rm -rf $mutant_file_name
+cd ../..
