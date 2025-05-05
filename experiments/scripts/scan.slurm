@@ -39,8 +39,9 @@ fi
 # Scan program for mutation targets
 # --------------------------------------------------------------------
 file_name_with_ext=$(ls $PROGRAMS_DIR | sed -n $SLURM_ARRAY_TASK_ID'p')
-file_name=$(basename $file_name_with_ext .dfy)
 program=$PROGRAMS_DIR/$file_name_with_ext
+file_name_with_ext=$(sed 's/ /_/g' <<< $file_name_with_ext)
+file_name=$(basename $file_name_with_ext .dfy)
 mkdir tmp_$file_name # move job to dir isolated from remaining jobs
 cd tmp_$file_name
 

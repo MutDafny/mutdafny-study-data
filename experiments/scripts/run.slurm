@@ -13,10 +13,10 @@ fi
 
 sbatch --export=op=$op scan.slurm
 
-number_of_jobs_running=$(squeue | grep -E "mutdafny|scan|mutant" | wc -l)
+number_of_jobs_running=$(squeue | grep -E "mutdafny|scan|mutant" | grep -v "(JobHeldAdmin)" | grep -v "(launch failed requeued held)" | wc -l)
 while [[ $number_of_jobs_running -ne 1 ]]
 do
-    number_of_jobs_running=$(squeue | grep -E "mutdafny|scan|mutant" | wc -l)
+    number_of_jobs_running=$(squeue | grep -E "mutdafny|scan|mutant" | grep -v "(JobHeldAdmin)" | grep -v "(launch failed requeued held)" | wc -l)
 done
 echo Finished all jobs
 
