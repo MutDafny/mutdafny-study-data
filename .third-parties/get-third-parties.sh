@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 # This script downloads and sets up the following tools:
 #   - [.Net v9](https://dotnet.microsoft.com/en-us)
-#   - [Dafny (5f76b7dba6ccf10ba3c97c690973e8c2fd89efe2)](https://github.com/isabel-amaral/dafny)
+#   - [Dafny (d4b07ffd6226e2694271dfe14deff4a849d0e7e8)](https://github.com/isabel-amaral/dafny)
 #   - [DafnyBench (0cd28feed9cd0179b07fdb9d002f8c39063658e4)](https://github.com/sun-wendy/DafnyBench)
 #
 # Usage:
@@ -85,10 +85,12 @@ fi
 
 pushd . > /dev/null 2>&1
 cd "$DAFNY_HOME_DIR"
-  # Switch to writeable-ast-fields
-  git checkout writeable-ast-fields || die "[ERROR] Failed to checkout writeable-ast-fields branch!"
-  # Switch to 5f76b7dba6ccf10ba3c97c690973e8c2fd89efe2
-  git checkout 5f76b7dba6ccf10ba3c97c690973e8c2fd89efe2 || die "[ERROR] Failed to checkout 5f76b7dba6ccf10ba3c97c690973e8c2fd89efe2!"
+  # Switch to measure-plugin-time branch
+  git checkout measure-plugin-time || die "[ERROR] Failed to checkout measure-plugin-time branch!"
+  # Switch to d4b07ffd6226e2694271dfe14deff4a849d0e7e8
+  git checkout d4b07ffd6226e2694271dfe14deff4a849d0e7e8 || die "[ERROR] Failed to checkout d4b07ffd6226e2694271dfe14deff4a849d0e7e8!"
+  # Build it
+  make exe || die "[ERROR] Failed to build Dafny's!"
 popd > /dev/null 2>&1
 
 # Sanity check
