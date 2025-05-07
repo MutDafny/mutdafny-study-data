@@ -13,13 +13,15 @@ A total of 785 programs from the [DafnyBench](https://github.com/sun-wendy/Dafny
 
 ## Scripts
 
-<!-- TBA -->
+- [`scripts/collect-commits.sh`](scripts/collect-commits.sh), given a set of GitHub URLs, this script collects the commits in each repository that match specific keywords (e.g., fix).
 
 ## Data
 
 - [`data/generated/subjects.csv`](data/generated/subjects.csv) set Dafny programs.
 
 - [`data/generated/repositories.csv`](data/generated/repositories.csv) set of GitHub repositories with Dafny projects.
+
+- [`data/generated/commits.csv`](data/generated/commits.csv) GitHub URL of commit messages that match specific keywords (e.g., fix).
 
 ## Statistics
 
