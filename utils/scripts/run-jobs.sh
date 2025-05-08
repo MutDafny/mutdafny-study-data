@@ -169,7 +169,7 @@ find "$JOBS_DIR_PATH" -mindepth 1 -maxdepth 1 -type f -name "batch-*.txt" -exec 
 
 # How many jobs have not been completed successfully?
 number_of_jobs_to_run=0
-for script_file_path in $(find "$JOBS_DIR_PATH" -type f -name "job.sh"); do
+while read -r script_file_path; do
   log_file_path=$(echo "$script_file_path" | sed 's|/jobs/|/logs/|g' | sed 's|job.sh$|job.log|g')
   if [ -s "$log_file_path" ]; then # Log exists and it is not empty
     if ! tail -n1 "$log_file_path" | grep -q "^DONE\!$"; then
@@ -178,7 +178,7 @@ for script_file_path in $(find "$JOBS_DIR_PATH" -type f -name "job.sh"); do
   else
     number_of_jobs_to_run=$((number_of_jobs_to_run+1))
   fi
-done
+done < <(find "$JOBS_DIR_PATH" -type f -name "job.sh")
 echo "[DEBUG] number of jobs to run: $number_of_jobs_to_run"
 
 # Number of batches that could be executed in parallel, given machine's limits
@@ -191,7 +191,7 @@ batch_jobs_file_path="$JOBS_DIR_PATH/batch-$batch_id.txt"; rm -f "$batch_jobs_fi
 count_number_jobs_in_batch=0
 echo "[DEBUG] Creating batch-$batch_id"
 
-for script_file_path in $(find "$JOBS_DIR_PATH" -type f -name "job.sh" | shuf); do
+while read -r script_file_path; do
   # Has this job been completed successfully?
   log_file_path=$(echo "$script_file_path" | sed 's|/jobs/|/logs/|g' | sed 's|job.sh$|job.log|g')
   if [ -s "$log_file_path" ]; then # Log exists and it is not empty
@@ -216,7 +216,7 @@ for script_file_path in $(find "$JOBS_DIR_PATH" -type f -name "job.sh" | shuf); 
     batch_jobs_file_path="$JOBS_DIR_PATH/batch-$batch_id.txt"; rm -f "$batch_jobs_file_path"
     echo "[DEBUG] Creating batch-$batch_id"
   fi
-done
+done < <(find "$JOBS_DIR_PATH" -type f -name "job.sh" | shuf)
 # How many?
 number_of_batches_to_run=$(find "$JOBS_DIR_PATH" -mindepth 1 -maxdepth 1 -type f -name "batch-*.txt" | wc -l)
 echo "[DEBUG] number of batches to run: $number_of_batches_to_run"
@@ -259,9 +259,9 @@ for batch_id in $(seq 1 $number_of_batches_to_run); do
 done
 
 # Run/Submit batches
-for batch_script_file_path in $(find "$JOBS_DIR_PATH" -mindepth 1 -maxdepth 1 -type f -name "batch-*.sh" | shuf); do
+while read -r batch_script_file_path; do
   _run_batch_script "$batch_script_file_path" || die "[ERROR] Failed to run $batch_script_file_path!"
-done
+done < <(find "$JOBS_DIR_PATH" -mindepth 1 -maxdepth 1 -type f -name "batch-*.sh" | shuf)
 
 echo "DONE!"
 exit 0
