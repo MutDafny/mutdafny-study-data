@@ -155,7 +155,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     cat "$elapsed_time_file"
 
     # Save runtime data
-    echo "$(basename $INPUT_FILE_PATH .dfy),$row,$status,$(tail -n1 $elapsed_time_file),$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    echo "$(basename $INPUT_FILE_PATH .dfy),$row,$status,$(tail -n1 $elapsed_time_file),$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
 
     rm -f "$elapsed_time_file"
   done < <(cat "$TARGETS_FILE_PATH")
