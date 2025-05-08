@@ -125,6 +125,14 @@ cd "$OUTPUT_DIRECTORY_PATH"
     number_of_targets=0
   fi
 
+  helpers_file="helpers.txt"
+  if [ -s "$helpers_file" ]; then
+    echo "[DEBUG] helpers_file:"
+    cat "$helpers_file"
+  else
+    echo "[DEBUG] $helpers_file does not exist or it is empty!"
+  fi
+
   data_file="data.csv"
   echo "program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
   echo "$(basename $INPUT_FILE_PATH .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
