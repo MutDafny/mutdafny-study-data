@@ -122,7 +122,10 @@ cd "$MUTDAFNY_HOME_DIR"
   # Build [Dafny](https://dafny.org)'s submodule
   pushd . > /dev/null 2>&1
   cd dafny   || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny directory!"
+    # Build it
     make exe || die "[ERROR] Failed to build Dafny's!"
+    # Sanity check
+    dotnet "Binaries/Dafny.dll" --version || die "[ERROR] Dafny is not correctly installed!"
   popd > /dev/null 2>&1
 
   # Get [Z3](https://github.com/Z3Prover/z3)
@@ -154,12 +157,12 @@ cd "$MUTDAFNY_HOME_DIR"
   # Build [MutDafny](https://github.com/MutDafny/mutdafny)
   pushd . > /dev/null 2>&1
   cd mutdafny
+    # Build it
     dotnet build || die "[ERROR] Failed to build MutDafny!"
+    # Sanity check
+    [ -s "bin/Debug/net8.0/mutdafny.dll" ] || die "[ERROR] MutDafny is not correctly installed!"
   popd > /dev/null 2>&1
 popd > /dev/null 2>&1
-
-# Sanity check
-# TODO
 
 #
 # R packages
