@@ -123,6 +123,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     pos=$(echo "$row" | cut -f1 -d',')
     ope=$(echo "$row" | cut -f2 -d',')
     arg=$(echo "$row" | cut -f3 -d',') # Some mutation operators do not have a third element
+    echo "[DEBUG] Mutant: $row"
 
     start=$(date +%s%3N)
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
