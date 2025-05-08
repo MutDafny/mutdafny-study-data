@@ -104,7 +104,6 @@ while read -r row; do # benchmark_name,project_name
   fi
   [ -s "$program_under_test_file_path" ] || die "[ERROR] $program_under_test_file_path does not exist or it is empty!"
 
-  # stats/<mutation operator>/<Dafny program name>/>
   for op in $(echo "$MUTATION_OPERATORS" | tr ',' '\n'); do
     echo "[DEBUG] $ben :: $pid :: $op"
 
