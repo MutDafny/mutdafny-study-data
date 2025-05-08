@@ -117,7 +117,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
 
   targets_file="targets.csv"
   if [ -s "$targets_file" ]; then
-    echo "[DEBUG] $targets_file:"
+    echo "[DEBUG] targets_file:"
     cat "$targets_file"
     number_of_targets=$(wc -l < "$targets_file")
   else
