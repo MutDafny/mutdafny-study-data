@@ -38,7 +38,7 @@ USAGE="Usage: ${BASH_SOURCE[0]} \
    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default>] \
   [help]"
-if [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ] && [ "$#" -ne "4" ]; then
+if [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ] && [ "$#" -ne "6" ]; then
   die "$USAGE"
 fi
 
