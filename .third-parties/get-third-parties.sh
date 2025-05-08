@@ -148,7 +148,7 @@ cd "$MUTDAFNY_HOME_DIR"
 
     # Rename it and set its permissions
     mv "$Z3_BIN_FILE" "$SCRIPT_DIR/z3"
-    chmod 755 "$SCRIPT_DIR/z3"
+    chmod +x "$SCRIPT_DIR/z3"
   pushd . > /dev/null 2>&1
 
   # Build [MutDafny](https://github.com/MutDafny/mutdafny)
