@@ -28,7 +28,7 @@ MUTDAFNY_HOME_DIR="$THIRD_PARTIES_DIR/mutdafny"
 [ -d "$MUTDAFNY_HOME_DIR" ] || die "[ERROR] $MUTDAFNY_HOME_DIR does not exist!"
 
 # Check whether the dafnybench's directory is available
-DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/mutdafny"
+DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 [ -d "$DAFNYBENCH_HOME_DIR" ] || die "[ERROR] $DAFNYBENCH_HOME_DIR does not exist!"
 
 # ------------------------------------------------------------------------- Args
