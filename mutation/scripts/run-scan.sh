@@ -38,6 +38,11 @@ THIRD_PARTIES_DIR="$SCRIPT_DIR/../../.third-parties/"
 MUTDAFNY_HOME_DIR="$THIRD_PARTIES_DIR/mutdafny"
 [ -d "$MUTDAFNY_HOME_DIR" ] || die "[ERROR] $MUTDAFNY_HOME_DIR does not exist!"
 
+# Check whether the dotnet's is available
+DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
+[ -d "$DOTNET_HOME_DIR" ] || die "[ERROR] $DOTNET_HOME_DIR does not exist!"
+"$DOTNET_HOME_DIR/dotnet" --version > /dev/null 2>&1 || die "[ERROR] 'dotnet' is not available!"
+
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
