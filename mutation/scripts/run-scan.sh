@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+#
+# ------------------------------------------------------------------------------
+# Given a Dafny program (i.e., a .dfy file) and a mutation operator, this script
+# generates the set of target locations to mutate, in a nutshell, it runs MutDafny's
+# scan command and writes to the provided output directory three files
+# - `elapsed-time.csv` which reports
+#   * parsing time
+#   * plugin time
+#   * resolution time
+#   * verification time
+# - `targets.csv`
+# - `data.csv` which reports
+#   * program name
+#   * mutation operator
+#   * (all data reported by `elapsed-time.csv`)
+#   * number of rows in `targets.csv`
+#   * scan time as the total time to run MutDafny's scan command
+#
+# Usage:
+# run-scan.sh
+#   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy>
+#   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
+#   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/stats/<mutation operator>/<Dafny program name>/>
+#   [help]
+# ------------------------------------------------------------------------------
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
+source "$SCRIPT_DIR/../../utils/scripts/utils.sh" || exit 1
+
+# ------------------------------------------------------------------------- Envs
+
+# Check whether the .third-parties' directory is available
+THIRD_PARTIES_DIR="$SCRIPT_DIR/../../.third-parties/"
+[ -d "$THIRD_PARTIES_DIR" ] || die "[ERROR] $THIRD_PARTIES_DIR does not exist!"
+
+# Check whether the mutdafny's directory is available
+MUTDAFNY_HOME_DIR="$THIRD_PARTIES_DIR/mutdafny"
+[ -d "$MUTDAFNY_HOME_DIR" ] || die "[ERROR] $MUTDAFNY_HOME_DIR does not exist!"
+
+# ------------------------------------------------------------------------- Args
+
+USAGE="Usage: ${BASH_SOURCE[0]} \
+  --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy> \
+  --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
+  --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/stats/<mutation operator>/<Dafny program name>/> \
+  [help]"
+if [ "$#" -ne "1" ] && [ "$#" -ne "6" ]; then
+  die "$USAGE"
+fi
+
+# Print out script's arguments (which could help any debug session)
+echo "[INFO] ${BASH_SOURCE[0]} $@"
+
+INPUT_FILE_PATH=""
+MUTATION_OPERATOR=""
+OUTPUT_DIRECTORY_PATH=""
+
+while [[ "$1" = --* ]]; do
+  OPTION=$1; shift
+  case $OPTION in
+    (--input_file_path)
+      INPUT_FILE_PATH=$1;
+      shift;;
+    (--mutation_operator)
+      MUTATION_OPERATOR=$1;
+      shift;;
+    (--output_directory_path)
+      OUTPUT_DIRECTORY_PATH=$1;
+      shift;;
+    (--help)
+      echo "$USAGE";
+      exit 0;;
+    (*)
+      die "$USAGE";;
+  esac
+done
+
+# Check whether all arguments have been initialized
+[ "$INPUT_FILE_PATH" != "" ]       || die "[ERROR] Missing --input_file_path argument!"
+[ "$MUTATION_OPERATOR" != "" ]     || die "[ERROR] Missing --mutation_operator argument!"
+[ "$OUTPUT_DIRECTORY_PATH" != "" ] || die "[ERROR] Missing --output_directory_path argument!"
+
+# Check whether some arguments have been correctly initialized
+[ -s "$INPUT_FILE_PATH" ] || die "[ERROR] $INPUT_FILE_PATH does not exist or it is empty!"
+
+# ------------------------------------------------------------------------- Main
+
+echo "[INFO] Job started at $(date)"
+echo "[INFO] PID: $$"
+echo "[INFO] $(hostname)"
+echo "[INFO] Running MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH"
+
+# Create output directory, if it does not exist
+mkdir -p "$OUTPUT_DIRECTORY_PATH" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH!"
+
+# Clean up output directory
+rm -rf "$OUTPUT_DIRECTORY_PATH"/* "$OUTPUT_DIRECTORY_PATH"/.* > /dev/null 2>&1
+
+pushd . > /dev/null 2>&1
+cd "$OUTPUT_DIRECTORY_PATH"
+  start=$(date +%s%3N)
+  dotnet "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+    --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
+    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net9.0.203/mutdafny.dll","scan $MUTATION_OPERATOR" || die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
+  end=$(date +%s%3N)
+
+  elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
+  [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
+  echo "[DEBUG] $elapsed_time_file:"
+  cat "$elapsed_time_file"
+
+  targets_file="targets.csv"
+  [ -s "$targets_file" ] || die "[ERROR] $targets_file does not exist or it is empty!"
+  echo "[DEBUG] $targets_file:"
+  cat "$targets_file"
+
+  data_file="data.csv"
+  echo "program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
+  echo "$(basename $INPUT_FILE_PATH .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$(wc -l < $targets_file),$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
+  [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIRECTORY_PATH/$data_file does not exist or it is empty!"
+popd > /dev/null 2>&1
+
+echo "[INFO] Job finished at $(date)"
+echo "DONE!"
+exit 0
+
+# EOF
