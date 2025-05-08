@@ -5,7 +5,7 @@ This markdown file provides installation instructions of any required software.
 The top-level directory [`.third-parties/`](.third-parties/) provides a script named [`get-third-parties.sh`](.third-parties/get-third-parties.sh) which is responsible for automatically:
 
 - Assessing whether the requirements described in [REQUIREMENTS.md](REQUIREMENTS.md) are fulfilled.
-- Installing [.Net v9](https://dotnet.microsoft.com/en-us) in the top-level directory [`.third-parties/`](.third-parties/).
+- Installing [.Net v8.0.111](https://dotnet.microsoft.com/en-us) in the top-level directory [`.third-parties/`](.third-parties/).
 - Get [DafnyBench (0cd28feed9cd0179b07fdb9d002f8c39063658e4)](https://github.com/sun-wendy/DafnyBench).
 - Get and build [MutDafny](https://github.com/MutDafny/mutdafny).
 - Installing the following [R](https://www.r-project.org)'s packages under user's R's library directory through the [`get-libraries.R`](get-libraries.R) script:

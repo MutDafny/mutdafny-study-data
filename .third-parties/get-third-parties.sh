@@ -2,7 +2,7 @@
 #
 # ------------------------------------------------------------------------------
 # This script downloads and sets up the following tools:
-#   - [.Net v9](https://dotnet.microsoft.com/en-us)
+#   - [.Net v8.0.111](https://dotnet.microsoft.com/en-us)
 #   - [DafnyBench (0cd28feed9cd0179b07fdb9d002f8c39063658e4)](https://github.com/sun-wendy/DafnyBench)
 #   - [MutDafny](https://github.com/MutDafny/mutdafny)
 #
@@ -46,7 +46,7 @@ echo ""
 echo "Get and set .Net..."
 
 DOTNET_HOME_DIR="$SCRIPT_DIR/dotnet"
-DOTNET_VERSION="9.0.203"
+DOTNET_VERSION="8.0.111"
 DOTNET_FILE="dotnet-sdk-$DOTNET_VERSION-linux-x64.tar.gz"
 DOTNET_URL="https://builds.dotnet.microsoft.com/dotnet/Sdk/$DOTNET_VERSION/$DOTNET_FILE"
 
@@ -60,11 +60,13 @@ if [ "$?" -ne "0" ] || [ ! -s "$SCRIPT_DIR/$DOTNET_FILE" ]; then
 fi
 
 # Extract it
+mkdir -p "$DOTNET_HOME_DIR"
 tar -xvzf "$DOTNET_FILE" -C "$DOTNET_HOME_DIR" || die "[ERROR] Failed to extract $SCRIPT_DIR/$DOTNET_FILE!"
 [ -d "$DOTNET_HOME_DIR" ] || die "[ERROR] $DOTNET_HOME_DIR does not exist!"
 
-# Sanity check
-# TODO
+# Check whether 'dotnet' is available
+export PATH="$DOTNET_HOME_DIR:$PATH"
+dotnet --version > /dev/null 2>&1 || die "[ERROR] 'dotnet' is not available!"
 
 #
 # Get DafnyBench
