@@ -81,7 +81,7 @@ done
 
 # Create output directory from scratch
 rm -rf "$OUTPUT_DIR_PATH"
-mkdir -p "$OUTPUT_DIRECTORY_PATH" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH!"
+mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
 
 # Create experiment's directories
               data_dir_path="$OUTPUT_DIR_PATH/data"
