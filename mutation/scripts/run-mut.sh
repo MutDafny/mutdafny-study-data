@@ -110,6 +110,7 @@ rm -rf "$OUTPUT_DIRECTORY_PATH"/* "$OUTPUT_DIRECTORY_PATH"/.* > /dev/null 2>&1
 cp "$HELPERS_FILE_PATH" "$OUTPUT_DIRECTORY_PATH/helpers.txt"
 
 # Create data file
+mkdir -p $(dirname "$OUTPUT_FILE_PATH")
 echo "program_name,mutation_position,mutation_operator,mutation,status,parsing_time,plugin_time,resolution_time,verification_time,run_time" > "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to create $OUTPUT_FILE_PATH!"
 
 tmp_log_file="$OUTPUT_DIRECTORY_PATH/.tmp_mut.log"
