@@ -126,7 +126,7 @@ while read -r row; do # benchmark_name,project_name
   done
 done < <(tail -n +2 "$INPUT_FILE_PATH")
 
-echo "Jobs have been created. Please run the $SCRIPT_DIR/../../utils/scripts/run-jobs.sh script on the generated jobs."
+echo "Jobs have been created. Please run the $SCRIPT_DIR/../../utils/scripts/run-jobs.sh script on the generated jobs, e.g., $SCRIPT_DIR/../../utils/scripts/run-jobs.sh --jobs_dir_path $OUTPUT_DIR_PATH/jobs."
 
 echo "DONE!"
 exit 0
