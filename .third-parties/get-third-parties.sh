@@ -3,8 +3,8 @@
 # ------------------------------------------------------------------------------
 # This script downloads and sets up the following tools:
 #   - [.Net v9](https://dotnet.microsoft.com/en-us)
-#   - [Dafny (d4b07ffd6226e2694271dfe14deff4a849d0e7e8)](https://github.com/isabel-amaral/dafny)
 #   - [DafnyBench (0cd28feed9cd0179b07fdb9d002f8c39063658e4)](https://github.com/sun-wendy/DafnyBench)
+#   - [MutDafny](https://github.com/MutDafny/mutdafny)
 #
 # Usage:
 #   get-third-parties.sh
@@ -67,36 +67,6 @@ tar -xvzf "$DOTNET_FILE" -C "$DOTNET_HOME_DIR" || die "[ERROR] Failed to extract
 # TODO
 
 #
-# Get Dafny
-#
-
-echo ""
-echo "Setting up Dafny..."
-
-DAFNY_HOME_DIR="$SCRIPT_DIR/dafny"
-
-# Remove any previous directory
-rm -rf "$DAFNY_HOME_DIR"
-
-git clone https://github.com/isabel-amaral/dafny.git "$DAFNY_HOME_DIR"
-if [ "$?" -ne "0" ] || [ ! -d "$DAFNY_HOME_DIR" ]; then
-  die "[ERROR] Failed to clone Dafny's repository!"
-fi
-
-pushd . > /dev/null 2>&1
-cd "$DAFNY_HOME_DIR"
-  # Switch to measure-plugin-time branch
-  git checkout measure-plugin-time || die "[ERROR] Failed to checkout measure-plugin-time branch!"
-  # Switch to d4b07ffd6226e2694271dfe14deff4a849d0e7e8
-  git checkout d4b07ffd6226e2694271dfe14deff4a849d0e7e8 || die "[ERROR] Failed to checkout d4b07ffd6226e2694271dfe14deff4a849d0e7e8!"
-  # Build it
-  make exe || die "[ERROR] Failed to build Dafny's!"
-popd > /dev/null 2>&1
-
-# Sanity check
-# TODO
-
-#
 # Get DafnyBench
 #
 
@@ -124,6 +94,70 @@ find "$DAFNYBENCH_HOME_DIR/DafnyBench/dataset/ground_truth" -mindepth 1 -maxdept
   sort --ignore-case | \
   sed "s|.dfy$||g"   | \
   sed "s|^|DafnyBench,|g" >> "$SUBJECTS_FILE"
+
+#
+# Get MutDafny
+#
+
+echo ""
+echo "Setting up MutDafny..."
+
+MUTDAFNY_HOME_DIR="$SCRIPT_DIR/mutdafny"
+
+# Remove any previous directory
+rm -rf "$MUTDAFNY_HOME_DIR"
+
+git clone --recursive https://github.com/MutDafny/mutdafny.git "$MUTDAFNY_HOME_DIR"
+if [ "$?" -ne "0" ] || [ ! -d "$MUTDAFNY_HOME_DIR" ]; then
+  die "[ERROR] Failed to clone MutDafny's repository!"
+fi
+
+pushd . > /dev/null 2>&1
+cd "$MUTDAFNY_HOME_DIR"
+  # Switch to latest commit/version
+  # TODO git checkout ????? || die "[ERROR] Failed to checkout ?????!"
+
+  # Build [Dafny](https://dafny.org)'s submodule
+  pushd . > /dev/null 2>&1
+  cd dafny   || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny directory!"
+    make exe || die "[ERROR] Failed to build Dafny's!"
+  popd > /dev/null 2>&1
+
+  # Get [Z3](https://github.com/Z3Prover/z3)
+  pushd . > /dev/null 2>&1
+  cd dafny/Binaries || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny/Binaries directory!"
+    Z3_VERSION="4.12.1"
+    Z3_BIN_FILE="$SCRIPT_DIR/z3-$Z3_VERSION"
+    Z3_ZIP_FILE="z3-$Z3_VERSION-x64-ubuntu-22.04-bin.zip"
+    Z3_URL="https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2024-04-10/$Z3_ZIP_FILE"
+
+    # Remove any previous file or directory
+    rm -f "$Z3_BIN_FILE" "$SCRIPT_DIR/$Z3_ZIP_FILE"
+
+    # Get distribution file
+    wget -np -nv "$Z3_URL" -O "$SCRIPT_DIR/$Z3_ZIP_FILE"
+    if [ "$?" -ne "0" ] || [ ! -s "$SCRIPT_DIR/$Z3_ZIP_FILE" ]; then
+      die "[ERROR] Failed to download $Z3_URL!"
+    fi
+
+    # Extract it
+    unzip "$SCRIPT_DIR/$Z3_ZIP_FILE" || die "[ERROR] Failed to extract $SCRIPT_DIR/$Z3_ZIP_FILE!"
+    [ -s "$Z3_BIN_FILE" ] || die "[ERROR] $Z3_BIN_FILE does not exist or it is empty!"
+
+    # Rename it and set its permissions
+    mv "$Z3_BIN_FILE" "$SCRIPT_DIR/z3"
+    chmod 755 "$SCRIPT_DIR/z3"
+  pushd . > /dev/null 2>&1
+
+  # Build [MutDafny](https://github.com/MutDafny/mutdafny)
+  pushd . > /dev/null 2>&1
+  cd mutdafny
+    dotnet build || die "[ERROR] Failed to build MutDafny!"
+  popd > /dev/null 2>&1
+popd > /dev/null 2>&1
+
+# Sanity check
+# TODO
 
 #
 # R packages

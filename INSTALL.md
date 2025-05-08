@@ -6,8 +6,8 @@ The top-level directory [`.third-parties/`](.third-parties/) provides a script n
 
 - Assessing whether the requirements described in [REQUIREMENTS.md](REQUIREMENTS.md) are fulfilled.
 - Installing [.Net v9](https://dotnet.microsoft.com/en-us) in the top-level directory [`.third-parties/`](.third-parties/).
-- Get [Dafny (d4b07ffd6226e2694271dfe14deff4a849d0e7e8)](https://github.com/isabel-amaral/dafny).
 - Get [DafnyBench (0cd28feed9cd0179b07fdb9d002f8c39063658e4)](https://github.com/sun-wendy/DafnyBench).
+- Get and build [MutDafny](https://github.com/MutDafny/mutdafny).
 - Installing the following [R](https://www.r-project.org)'s packages under user's R's library directory through the [`get-libraries.R`](get-libraries.R) script:
   * [data.table: Extension of 'data.frame'](https://cran.r-project.org/web/packages/data.table/index.html)
   * [stringr: Simple, Consistent Wrappers for Common String Operations](https://cran.r-project.org/web/packages/stringr/index.html)
