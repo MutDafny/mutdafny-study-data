@@ -116,13 +116,18 @@ cd "$OUTPUT_DIRECTORY_PATH"
   cat "$elapsed_time_file"
 
   targets_file="targets.csv"
-  [ -s "$targets_file" ] || die "[ERROR] $targets_file does not exist or it is empty!"
-  echo "[DEBUG] $targets_file:"
-  cat "$targets_file"
+  if [ -s "$targets_file" ]; then
+    echo "[DEBUG] $targets_file:"
+    cat "$targets_file"
+    number_of_targets=$(wc -l < "$targets_file")
+  else
+    echo "[DEBUG] $targets_file does not exist or it is empty!"
+    number_of_targets=0
+  fi
 
   data_file="data.csv"
   echo "program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
-  echo "$(basename $INPUT_FILE_PATH .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$(wc -l < $targets_file),$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
+  echo "$(basename $INPUT_FILE_PATH .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
   [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIRECTORY_PATH/$data_file does not exist or it is empty!"
 popd > /dev/null 2>&1
 
