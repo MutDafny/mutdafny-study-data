@@ -129,25 +129,25 @@ cd "$OUTPUT_DIRECTORY_PATH"
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
         --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
         --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" > "$tmp_log_file" 2>&1
-    if [ "$?" -ne "0" ]; then
-      cat "$tmp_log_file"
-      echo "[ERROR] Failed to run MutDafny's run command on $row!"
-      continue
-    else
-      cat "$tmp_log_file"
-    fi
+    ret="$?"
     end=$(date +%s%3N)
+    cat "$tmp_log_file"
 
-    # Check mutant's status
-    if grep -q "Dafny program verifier finished.*0 errors" "$tmp_log_file"; then
-      echo "[DEBUG] Verification succeeded, i.e., mutant survived"
-      status="alive"
-    elif grep -q "Dafny program verifier finished.*time out" "$tmp_log_file"; then
-      echo "[DEBUG] Verification timed out"
-      status="timeout"
+    if [ "$ret" -ne "0" ]; then
+      echo "[DEBUG] Failed to run MutDafny's run command on $row!"
+      status="invalid"
     else
-      echo "[DEBUG] Verification failed, i.e., mutant was killed"
-      status="killed"
+      # Check mutant's status
+      if grep -q "Dafny program verifier finished.*0 errors" "$tmp_log_file"; then
+        echo "[DEBUG] Verification succeeded, i.e., mutant survived"
+        status="alive"
+      elif grep -q "Dafny program verifier finished.*time out" "$tmp_log_file"; then
+        echo "[DEBUG] Verification timed out"
+        status="timeout"
+      else
+        echo "[DEBUG] Verification failed, i.e., mutant was killed"
+        status="killed"
+      fi
     fi
 
     elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
