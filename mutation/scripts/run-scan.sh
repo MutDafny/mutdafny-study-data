@@ -137,6 +137,8 @@ cd "$OUTPUT_DIRECTORY_PATH"
   echo "program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
   echo "$(basename $INPUT_FILE_PATH .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
   [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIRECTORY_PATH/$data_file does not exist or it is empty!"
+
+  rm -f "$elapsed_time_file"
 popd > /dev/null 2>&1
 
 echo "[INFO] Job finished at $(date)"
