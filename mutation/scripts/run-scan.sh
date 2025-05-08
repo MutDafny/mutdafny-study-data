@@ -100,9 +100,9 @@ rm -rf "$OUTPUT_DIRECTORY_PATH"/* "$OUTPUT_DIRECTORY_PATH"/.* > /dev/null 2>&1
 pushd . > /dev/null 2>&1
 cd "$OUTPUT_DIRECTORY_PATH"
   start=$(date +%s%3N)
-  dotnet "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+  "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
     --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
-    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net9.0.203/mutdafny.dll","scan $MUTATION_OPERATOR" || die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
+    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR" || die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
   end=$(date +%s%3N)
 
   elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
