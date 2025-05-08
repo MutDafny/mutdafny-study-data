@@ -79,8 +79,7 @@ done
 
 # ------------------------------------------------------------------------- Args
 
-# Create output directory from scratch
-rm -rf "$OUTPUT_DIR_PATH"
+# Create output directory, if it does not exist
 mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
 
 # Create experiment's directories
