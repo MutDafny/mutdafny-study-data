@@ -21,7 +21,7 @@
 # run-scan.sh
 #   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy>
 #   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
-#   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/stats/<mutation operator>/<Dafny program name>/>
+#   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator>/<Dafny program name>/>
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 USAGE="Usage: ${BASH_SOURCE[0]} \
   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy> \
   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
-  --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/stats/<mutation operator>/<Dafny program name>/> \
+  --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator>/<Dafny program name>/> \
   [help]"
 if [ "$#" -ne "1" ] && [ "$#" -ne "6" ]; then
   die "$USAGE"
