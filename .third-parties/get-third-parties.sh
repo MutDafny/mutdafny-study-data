@@ -131,7 +131,7 @@ cd "$MUTDAFNY_HOME_DIR"
   # Get [Z3](https://github.com/Z3Prover/z3)
   pushd . > /dev/null 2>&1
   cd dafny/Binaries || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny/Binaries directory!"
-    Z3_VERSION="4.12.1"
+    Z3_VERSION="4.12.6"
     Z3_BIN_FILE="$SCRIPT_DIR/z3-$Z3_VERSION"
     Z3_ZIP_FILE="z3-$Z3_VERSION-x64-ubuntu-22.04-bin.zip"
     Z3_URL="https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2024-04-10/$Z3_ZIP_FILE"
