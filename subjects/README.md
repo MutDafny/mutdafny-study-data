@@ -13,11 +13,15 @@ A total of 785 programs from the [DafnyBench](https://github.com/sun-wendy/Dafny
 
 ## Scripts
 
+- [`scripts/collect-whitelist-subjects.sh`](scripts/collect-whitelist-subjects.sh), collects the set of Dafny programs defined in the [`data/generated/subjects.csv`](data/generated/subjects.csv) that can be verified successfully.
+
 - [`scripts/collect-commits.sh`](scripts/collect-commits.sh), given a set of GitHub URLs, this script collects the commits in each repository that match specific keywords (e.g., fix).
 
 ## Data
 
 - [`data/generated/subjects.csv`](data/generated/subjects.csv) set Dafny programs.
+
+- [`data/generated/subjects-whitelist.csv`](data/generated/subjects-whitelist.csv) set of verifiable Dafny programs.
 
 - [`data/generated/repositories.csv`](data/generated/repositories.csv) set of GitHub repositories with Dafny projects.
 
