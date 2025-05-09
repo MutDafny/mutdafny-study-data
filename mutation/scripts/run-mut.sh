@@ -143,7 +143,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, [1-9]+ error[s]?, [1-9]+ time out$" "$tmp_log_file"; then
       status="killed"
     else
-      die "Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row! (return code: $ret)"
+      die "[ERROR] Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row! (return code: $ret)"
     fi
     echo "[DEBUG] Mutant $row $status"
 
