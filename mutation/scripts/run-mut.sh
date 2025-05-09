@@ -124,7 +124,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     pos=$(echo "$row" | cut -f1 -d',')
     ope=$(echo "$row" | cut -f2 -d',')
     arg=$(echo "$row" | cut -f3 -d',') # Some mutation operators do not have a third element
-    echo "[DEBUG] Mutant: $row"
+    echo "[DEBUG] Mutant $row"
 
     start=$(date +%s%3N)
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
@@ -134,22 +134,18 @@ cd "$OUTPUT_DIRECTORY_PATH"
     end=$(date +%s%3N)
     cat "$tmp_log_file"
 
-    if [ "$ret" -ne "0" ]; then
-      echo "[DEBUG] Failed to run MutDafny's run command on $row!"
-      status="invalid"
+    if grep -Eq   "^Dafny program verifier finished with [1-9]+ verified, 0 errors$" "$tmp_log_file"; then
+      status="survived"
+    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, 0 errors, [1-9]+ time out$" "$tmp_log_file"; then
+      status="timeout"
+    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, [1-9]+ error[s]?$" "$tmp_log_file"; then
+      status="killed"
+    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, [1-9]+ error[s]?, [1-9]+ time out$" "$tmp_log_file"; then
+      status="killed"
     else
-      # Check mutant's status
-      if grep -q "Dafny program verifier finished.*0 errors" "$tmp_log_file"; then
-        echo "[DEBUG] Verification succeeded, i.e., mutant survived"
-        status="alive"
-      elif grep -q "Dafny program verifier finished.*time out" "$tmp_log_file"; then
-        echo "[DEBUG] Verification timed out"
-        status="timeout"
-      else
-        echo "[DEBUG] Verification failed, i.e., mutant was killed"
-        status="killed"
-      fi
+      die "Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row! (return code: $ret)"
     fi
+    echo "[DEBUG] Mutant $row $status"
 
     elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
     [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
