@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 source "$SCRIPT_DIR/../utils/scripts/utils.sh" || exit 1
 
 SUBJECTS_FILE="$SCRIPT_DIR/../subjects/data/generated/subjects.csv"
-echo "benchmark_name,project_name" > "$SUBJECTS_FILE" || die "[ERROR] Failed to create $SUBJECTS_FILE!"
+echo "benchmark_name,program_name" > "$SUBJECTS_FILE" || die "[ERROR] Failed to create $SUBJECTS_FILE!"
 
 # ------------------------------------------------------------------------- Deps
 
