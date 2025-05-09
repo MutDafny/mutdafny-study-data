@@ -93,7 +93,7 @@ popd > /dev/null 2>&1
 
 # Collect set of programs
 find "$DAFNYBENCH_HOME_DIR/DafnyBench/dataset/ground_truth" -mindepth 1 -maxdepth 1 -type f -name "*.dfy" -exec basename {} \; | \
-  sort --ignore-case | \
+  sort --ignore-case --human-numeric-sort | \
   sed "s|.dfy$||g"   | \
   sed "s|^|DafnyBench,|g" >> "$SUBJECTS_FILE"
 
