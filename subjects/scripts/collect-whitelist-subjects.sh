@@ -42,8 +42,8 @@ fi
 # Print out script's arguments (which could help any debug session)
 echo "[INFO] ${BASH_SOURCE[0]} $@"
 
-INPUT_FILE_PATH=""
-OUTPUT_FILE_PATH=""
+INPUT_FILE_PATH="$SCRIPT_DIR/../data/generated/subjects.csv"
+OUTPUT_FILE_PATH="$SCRIPT_DIR/../data/generated/subjects-whitelist.csv"
 
 while [[ "$1" = --* ]]; do
   OPTION=$1; shift
