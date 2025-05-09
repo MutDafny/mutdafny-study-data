@@ -47,18 +47,150 @@ In case the execution does not finished successfully, the script will print out 
 
 Visit the [INSTALL.md](INSTALL.md) file for more details.
 
-## Subjects
+## Experiments
 
-<!-- TODO: TBA -->
+Below you might find the step-by-step on how to execute the experiments described in our study for a single Dafny program and for **all** programs listed in [`subjects/data/generated/subjects.csv`](subjects/data/generated/subjects.csv). For the single Dafny program's step-by-step, start by initializing the following variables:
 
-## Experiment / Analysis A
+```bash
+PROGRAM_NAME="630-dafny_tmp_tmpz2kokaiq_Solution"
+MUTATION_OPERATOR="BOR"
+```
 
-<!-- TODO: TBA -->
+**Note:** the step-by-step assumes you are running commands from the repository's root directory.
 
-## Experiment / Analysis B
 
-<!-- TODO: TBA -->
+### 1. Generation of mutation targets
 
-## Experiment / Analysis C
+<!-- TODO: add a brief description of the procedure to generate the targets -->
 
-<!-- TODO: TBA -->
+To generate the mutation targets for the running example Dafny program one could run the following command:
+
+```bash
+bash "mutation/scripts/run-scan.sh" \
+  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --mutation_operator "$MUTATION_OPERATOR" \
+  --output_directory_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/"
+```
+
+which generates two CSV files:
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/targets.csv`, set of mutation targets.
+
+and one helper file (later used in the mutation analysis):
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
+
+**Note:** The script [`mutation/scripts/gen-scan-jobs.sh`](mutation/scripts/gen-scan-jobs.sh) automatizes the process of running MutDafny's `scan` command on **all** programs listed in [`subjects/data/generated/subjects.csv`](subjects/data/generated/subjects.csv) on one or more mutation operators. For instance,
+
+1. Generate jobs, where each job is the execution of the [`mutation/scripts/run-scan.sh`](mutation/scripts/run-scan.sh) script on a given Dafny program and mutation operator, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
+
+```bash
+bash "mutation/scripts/gen-scan-jobs.sh" \
+  --input_file_path "subjects/data/generated/subjects.csv" \
+  --mutation_operators "BOR,BBR,UOI,UOD,LVR,EVR,LSR,LBI,CIR,SDL" \
+  --output_dir_path "mutation/data/generated/scan"
+```
+
+This would generate three top-level directories in the provided output dir (`jobs`, `logs`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
+- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
+- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
+- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+
+2. Run jobs in parallel.
+
+```bash
+bash "utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "mutation/data/generated/scan/jobs" \
+  --seconds_per_job 60 \
+  --max_number_batches 128 \
+  --memory 1024
+```
+
+This script splits the set of jobs created by the [`mutation/scripts/gen-scan-jobs.sh`](mutation/scripts/gen-scan-jobs.sh) script in batches (as some clusters might have a hard limit) and either run them using [GNU Parallel](https://www.gnu.org/software/parallel) or submit them to the cluster's workload manager, i.e., [Slurm](https://slurm.schedmd.com). If the machine supports the [Slurm](https://slurm.schedmd.com) workload manager, jobs are submitted to it. If not, jobs are executed using [GNU Parallel](https://www.gnu.org/software/parallel).
+
+**Tip:** To compute the number of jobs that finished successfully one could run the following command:
+
+```bash
+find "mutation/data/generated/scan/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+```
+
+**Tip:** If some jobs finished unsuccessfully due to cluster's timeouts or simply because they ran out of memory, you could re-run the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script with a different time/memory value. (Note: the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script would only re-run jobs that finished unsuccessfully.)
+For example, twice the time and memory per job:
+
+```bash
+bash "utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "mutation/data/generated/scan/jobs" \
+  --seconds_per_job 120 \
+  --max_number_batches 128 \
+  --memory 2048
+```
+
+### 2. Mutation analysis
+
+<!-- TODO: add a brief description of (a) the actual generation of mutants and (b) the verification step -->
+
+The script to run mutation analysis are very similar to the ones to generate of mutation targets. To run mutation analysis for the running example Dafny program one could run the following command:
+
+```bash
+bash "mutation/scripts/run-mut.sh" \
+  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --targets_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/targets.csv" \
+  --helpers_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/helpers.txt" \
+  --output_file_path "mutation/data/generated/mut/data/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv" \
+  --output_directory_path "mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$PROGRAM_NAME/"
+```
+
+which generates one CSV file:
+- `mutation/data/generated/mut/data/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `mut` command.
+
+and .dfy files in the provided output directory, one per mutant generated by MutDafny.
+
+**Note:** The script [`mutation/scripts/gen-mut-jobs.sh`](mutation/scripts/gen-mut-jobs.sh) automatizes the process of running MutDafny's `mut` command on **all** programs listed in [`subjects/data/generated/subjects.csv`](subjects/data/generated/subjects.csv) on one or more mutation operators. For instance,
+
+1. Generate jobs, where each job is the execution of the [`mutation/scripts/run-mut.sh`](mutation/scripts/run-mut.sh) script on a given Dafny program and mutation operator, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
+
+```bash
+bash "mutation/scripts/gen-mut-jobs.sh" \
+  --input_file_path "subjects/data/generated/subjects.csv" \
+  --mutation_operators "BOR,BBR,UOI,UOD,LVR,EVR,LSR,LBI,CIR,SDL" \
+  --scan_dir_path "mutation/data/generated/scan" \
+  --output_dir_path "mutation/data/generated/mut"
+```
+
+This would generate four top-level directories in the provided output dir (`jobs`, `logs`, `mutants`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
+- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
+- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
+- `mutants/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+
+2. Run jobs in parallel.
+
+```bash
+bash "utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "mutation/data/generated/mut/jobs" \
+  --seconds_per_job 60 \
+  --max_number_batches 128 \
+  --memory 1024
+```
+
+This script splits the set of jobs created by the [`mutation/scripts/gen-mut-jobs.sh`](mutation/scripts/gen-mut-jobs.sh) script in batches (as some clusters might have a hard limit) and either run them using [GNU Parallel](https://www.gnu.org/software/parallel) or submit them to the cluster's workload manager, i.e., [Slurm](https://slurm.schedmd.com). If the machine supports the [Slurm](https://slurm.schedmd.com) workload manager, jobs are submitted to it. If not, jobs are executed using [GNU Parallel](https://www.gnu.org/software/parallel).
+
+**Tip:** To compute the number of jobs that finished successfully one could run the following command:
+
+```bash
+find "mutation/data/generated/mut/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+```
+
+**Tip:** If some jobs finished unsuccessfully due to cluster's timeouts or simply because they ran out of memory, you could re-run the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script with a different time/memory value. (Note: the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script would only re-run jobs that finished unsuccessfully.)
+For example, twice the time and memory per job:
+
+```bash
+bash "utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "mutation/data/generated/mut/jobs" \
+  --seconds_per_job 120 \
+  --max_number_batches 128 \
+  --memory 2048
+```
