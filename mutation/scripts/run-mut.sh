@@ -149,15 +149,20 @@ cd "$OUTPUT_DIRECTORY_PATH"
     fi
     echo "[DEBUG] Mutant $row $status"
 
-    elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
-    [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
-    echo "[DEBUG] $elapsed_time_file:"
-    cat "$elapsed_time_file"
+    if [ "$status" == "invalid" ]; then
+      # invalid mutants do not produce an elapsed-time.csv file
+      elapsed_times=",,,"
+    else
+      elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
+      [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
+      echo "[DEBUG] $elapsed_time_file:"
+      cat "$elapsed_time_file"
+      elapsed_times=$(tail -n1 "$elapsed_time_file")
+      rm -f "$elapsed_time_file"
+    fi
 
     # Save runtime data
-    echo "$(basename $INPUT_FILE_PATH .dfy),$pos,$ope,$arg,$status,$(tail -n1 $elapsed_time_file),$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
-
-    rm -f "$elapsed_time_file"
+    echo "$(basename $INPUT_FILE_PATH .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
   done < <(cat "$TARGETS_FILE_PATH")
 
 popd > /dev/null 2>&1
