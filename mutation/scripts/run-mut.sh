@@ -4,6 +4,7 @@
 # Given a Dafny program (i.e., a .dfy file) and a set of mutation targets, this
 # script generated all mutants defined in the set, in a nutshell, it runs MutDafny's
 # mut command and writes the generated mutants to the provided output directory.
+# Data of the execution is written to the provided output file.
 #
 # Usage:
 # run-mut.sh
