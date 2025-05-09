@@ -29,6 +29,10 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 [ -d "$DOTNET_HOME_DIR" ] || die "[ERROR] $DOTNET_HOME_DIR does not exist!"
 "$DOTNET_HOME_DIR/dotnet" --version > /dev/null 2>&1 || die "[ERROR] 'dotnet' is not available!"
 
+# Check whether the dafnybench's directory is available
+DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
+[ -d "$DAFNYBENCH_HOME_DIR" ] || die "[ERROR] $DAFNYBENCH_HOME_DIR does not exist!"
+
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
