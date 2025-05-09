@@ -131,6 +131,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     cat "$helpers_file"
   else
     echo "[DEBUG] $helpers_file does not exist or it is empty!"
+    touch "$helpers_file" # Create an empty one
   fi
 
   data_file="data.csv"
