@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
 # ------------------------------------------------------------------------------
-# This script creates as many jobs (where each jobs executed the [QuraTest](https://github.com/ToolmanInside/quratest-mutators.git)
-# tool) as many times as the number of unique quantum circuits defined in
-# [`../../subjects/data/generated/subjects.csv`](../../subjects/data/generated/subjects.csv)
-# times number of repetitions.
+# This script creates as many jobs (where each job executes the [`run-scan.sh`](run-scan.sh)
+# script on a Dafny program and a mutation operator) as the number of Dafny programs
+# defined in [`$SCRIPT_DIR/../../subjects/data/generated/subjects.csv`]($SCRIPT_DIR/../../subjects/data/generated/subjects.csv)
+# times the number of mutation operators.
 #
 # Usage:
 # gen-scan-jobs.sh
-#   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects.csv (by default>]
+#   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects.csv (by default)>]
 #    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
-#   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default>]
+#   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>]
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects.csv (by default)>] \
    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
-  [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default>] \
+  [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>] \
   [help]"
 if [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ] && [ "$#" -ne "6" ]; then
   die "$USAGE"
@@ -91,7 +91,7 @@ master_job_script_file_path="$SCRIPT_DIR/run-scan.sh"
 mkdir -p "$data_dir_path" "$logs_dir_path" "$jobs_dir_path"
 
 # Create set of jobs
-while read -r row; do # benchmark_name,project_name
+while read -r row; do # benchmark_name,program_name
   ben=$(echo "$row" | cut -f1 -d',')
   pid=$(echo "$row" | cut -f2 -d',')
   echo "[DEBUG] $ben :: $pid"
