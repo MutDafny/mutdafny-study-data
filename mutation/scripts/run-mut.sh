@@ -92,7 +92,7 @@ done
 # Check whether some arguments have been correctly initialized
 [ -s "$INPUT_FILE_PATH" ]   || die "[ERROR] $INPUT_FILE_PATH does not exist or it is empty!"
 [ -s "$TARGETS_FILE_PATH" ] || die "[ERROR] $TARGETS_FILE_PATH does not exist or it is empty!"
-[ -s "$HELPERS_FILE_PATH" ] || die "[ERROR] $HELPERS_FILE_PATH does not exist or it is empty!"
+[ -f "$HELPERS_FILE_PATH" ] || die "[ERROR] $HELPERS_FILE_PATH does not exist!"
 
 # ------------------------------------------------------------------------- Main
 
