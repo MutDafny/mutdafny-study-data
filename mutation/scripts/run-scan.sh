@@ -21,7 +21,7 @@
 # run-scan.sh
 #   [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>]
 #   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy>
-#   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
+#   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|MCR|CIR|SDL>
 #   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/>
 #   [help]
 # ------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>] \
   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy> \
-  --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
+  --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|MCR|CIR|SDL> \
   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/> \
   [help]"
 if [ "$#" -ne "1" ] && [ "$#" -ne "6" ] && [ "$#" -ne "8" ]; then
