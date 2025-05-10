@@ -106,10 +106,10 @@ while read -r row; do # benchmark_name,program_name
   for op in $(echo "$MUTATION_OPERATORS" | tr ',' '\n'); do
     echo "[DEBUG] $ben :: $pid :: $op"
 
-       job_data_dir_path="$data_dir_path/$op/$pid"
-        job_log_dir_path="$logs_dir_path/$op/$pid"
+       job_data_dir_path="$data_dir_path/$op/$ben/$pid"
+        job_log_dir_path="$logs_dir_path/$op/$ben/$pid"
        job_log_file_path="$job_log_dir_path/job.log"
-     job_script_dir_path="$jobs_dir_path/$op/$pid"
+     job_script_dir_path="$jobs_dir_path/$op/$ben/$pid"
     job_script_file_path="$job_script_dir_path/job.sh"
 
     mkdir -p "$job_data_dir_path" "$job_log_dir_path" "$job_script_dir_path"
@@ -119,6 +119,7 @@ while read -r row; do # benchmark_name,program_name
     echo "#"                  >> "$job_script_file_path"
     echo "# timefactor:1"     >> "$job_script_file_path"
     echo "bash $master_job_script_file_path \
+  --benchmark_name \"$ben\" \
   --input_file_path \"$program_under_test_file_path\" \
   --mutation_operator \"$op\" \
   --output_directory_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"

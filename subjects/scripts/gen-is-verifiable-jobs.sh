@@ -100,11 +100,11 @@ while read -r row; do # benchmark_name,program_name
   fi
   [ -s "$program_under_test_file_path" ] || die "[ERROR] $program_under_test_file_path does not exist or it is empty!"
 
-     job_data_dir_path="$data_dir_path/$pid"
+     job_data_dir_path="$data_dir_path/$ben/$pid"
     job_data_file_path="$job_data_dir_path/data.csv"
-      job_log_dir_path="$logs_dir_path/$pid"
+      job_log_dir_path="$logs_dir_path/$ben/$pid"
      job_log_file_path="$job_log_dir_path/job.log"
-   job_script_dir_path="$jobs_dir_path/$pid"
+   job_script_dir_path="$jobs_dir_path/$ben/$pid"
   job_script_file_path="$job_script_dir_path/job.sh"
 
   mkdir -p "$job_data_dir_path" "$job_log_dir_path" "$job_script_dir_path"

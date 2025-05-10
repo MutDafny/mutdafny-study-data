@@ -19,9 +19,10 @@
 #
 # Usage:
 # run-scan.sh
+#   [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>]
 #   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy>
 #   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
-#   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator>/<Dafny program name>/>
+#   --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/>
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -46,17 +47,19 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
+  [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>] \
   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy> \
   --mutation_operator <BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
-  --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator>/<Dafny program name>/> \
+  --output_directory_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan/data/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/> \
   [help]"
-if [ "$#" -ne "1" ] && [ "$#" -ne "6" ]; then
+if [ "$#" -ne "1" ] && [ "$#" -ne "6" ] && [ "$#" -ne "8" ]; then
   die "$USAGE"
 fi
 
 # Print out script's arguments (which could help any debug session)
 echo "[INFO] ${BASH_SOURCE[0]} $@"
 
+BENCHMARK_NAME="DafnyBench"
 INPUT_FILE_PATH=""
 MUTATION_OPERATOR=""
 OUTPUT_DIRECTORY_PATH=""
@@ -64,6 +67,9 @@ OUTPUT_DIRECTORY_PATH=""
 while [[ "$1" = --* ]]; do
   OPTION=$1; shift
   case $OPTION in
+    (--benchmark_name)
+      BENCHMARK_NAME=$1;
+      shift;;
     (--input_file_path)
       INPUT_FILE_PATH=$1;
       shift;;
@@ -82,6 +88,7 @@ while [[ "$1" = --* ]]; do
 done
 
 # Check whether all arguments have been initialized
+[ "$BENCHMARK_NAME" != "" ]        || die "[ERROR] Missing --benchmark_name argument!"
 [ "$INPUT_FILE_PATH" != "" ]       || die "[ERROR] Missing --input_file_path argument!"
 [ "$MUTATION_OPERATOR" != "" ]     || die "[ERROR] Missing --mutation_operator argument!"
 [ "$OUTPUT_DIRECTORY_PATH" != "" ] || die "[ERROR] Missing --output_directory_path argument!"
@@ -135,8 +142,8 @@ cd "$OUTPUT_DIRECTORY_PATH"
   fi
 
   data_file="data.csv"
-  echo "program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
-  echo "$(basename "$INPUT_FILE_PATH" .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
+  echo "benchmark_name,program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIRECTORY_PATH/$data_file!"
+  echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIRECTORY_PATH/$data_file!"
   [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIRECTORY_PATH/$data_file does not exist or it is empty!"
 
   rm -f "$elapsed_time_file"

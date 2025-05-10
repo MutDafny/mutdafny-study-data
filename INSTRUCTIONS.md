@@ -125,17 +125,18 @@ To generate the mutation targets for the running example Dafny program one could
 
 ```bash
 bash "mutation/scripts/run-scan.sh" \
+  --benchmark_name "$BENCHMARK_NAME" \
   --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
   --mutation_operator "$MUTATION_OPERATOR" \
-  --output_directory_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/"
+  --output_directory_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates two CSV files (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/targets.csv`, set of mutation targets.
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv`, set of mutation targets.
 
 and one helper file (later used in the mutation analysis):
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
+- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
 
 **Note:** The script [`mutation/scripts/gen-scan-jobs.sh`](mutation/scripts/gen-scan-jobs.sh) automatizes the process of running MutDafny's `scan` command on **all** programs listed in [`subjects/data/generated/subjects-whitelist.csv`](subjects/data/generated/subjects-whitelist.csv) on one or more mutation operators. For instance,
 
@@ -149,11 +150,11 @@ bash "mutation/scripts/gen-scan-jobs.sh" \
 ```
 
 This would generate three top-level directories in the provided output dir (`jobs`, `logs`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
-- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
-  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
-- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
-  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
-- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
+  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
+- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
+  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
+- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
 
 2. Run jobs in parallel.
 
@@ -192,15 +193,16 @@ The script to run mutation analysis are very similar to the ones to generate of 
 
 ```bash
 bash "mutation/scripts/run-mut.sh" \
+  --benchmark_name "$BENCHMARK_NAME" \
   --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
-  --targets_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/targets.csv" \
-  --helpers_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$PROGRAM_NAME/helpers.txt" \
-  --output_file_path "mutation/data/generated/mut/data/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv" \
-  --output_directory_path "mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$PROGRAM_NAME/"
+  --targets_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv" \
+  --helpers_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt" \
+  --output_file_path "mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv" \
+  --output_directory_path "mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates one CSV file (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
-- `mutation/data/generated/mut/data/$MUTATION_OPERATOR/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `mut` command.
+- `mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `mut` command.
 
 and .dfy files in the provided output directory, one per mutant generated by MutDafny.
 
@@ -217,12 +219,12 @@ bash "mutation/scripts/gen-mut-jobs.sh" \
 ```
 
 This would generate four top-level directories in the provided output dir (`jobs`, `logs`, `mutants`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
-- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
-  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
-- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
-  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
-- `mutants/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
-- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Dafny program name>/`
+- `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
+  * `jobs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/job.sh` which runs `mutation/scripts/run-scan.sh`.
+- `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
+  * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
+- `mutants/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
+- `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>/<Benchmark name>/<Dafny program name>/`
 
 2. Run jobs in parallel.
 
