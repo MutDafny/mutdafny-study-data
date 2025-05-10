@@ -13,11 +13,23 @@ A total of 785 programs from the [DafnyBench](https://github.com/sun-wendy/Dafny
 
 ## Scripts
 
-- [`scripts/collect-whitelist-subjects.sh`](scripts/collect-whitelist-subjects.sh), collects the set of Dafny programs defined in the [`data/generated/subjects.csv`](data/generated/subjects.csv) that can be verified successfully.
+- [`scripts/is-verifiable.sh`](scripts/is-verifiable.sh), assesses whether the verification of a given a Dafny program (i.e., a .dfy file) runs successfully, in a nutshell, it runs Dafny's `verify` command and analyzes its output.
+
+Usage example:
+
+```bash
+bash scripts/is-verifiable.sh \
+  --input_file_path ../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy \
+  --output_file_path data/generated/is-verifiable/630-dafny_tmp_tmpz2kokaiq_Solution/data.csv
+```
+
+**Note:** The script [`scripts/gen-is-verifiable-jobs.sh`](scripts/gen-is-verifiable-jobs.sh) automatizes the process of running the [`scripts/is-verifiable.sh`](scripts/is-verifiable.sh) script on **all** programs listed in [`data/generated/subjects.csv`](data/generated/subjects.csv)
 
 - [`scripts/collect-commits.sh`](scripts/collect-commits.sh), given a set of GitHub URLs, this script collects the commits in each repository that match specific keywords (e.g., fix).
 
 ## Data
+
+Note: the structure of each CVS file is explained in the [data/FILE-SPECS.md](data/FILE-SPECS.md) file.
 
 - [`data/generated/subjects.csv`](data/generated/subjects.csv) set Dafny programs.
 

@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 #
 # ------------------------------------------------------------------------------
-# This script assesses whether the verification of a given set of Dafny programs
-# (i.e., .dfy files) runs successfully.
+# This script creates as many jobs (where each job executes the [`is-verifiable.sh`](is-verifiable.sh)
+# script on a Dafny program) as the number of Dafny programs defined in
+# [`$SCRIPT_DIR/../data/generated/subjects.csv`]($SCRIPT_DIR/../data/generated/subjects.csv).
 #
 # Usage:
-# collect-whitelist-subjects.sh
+# gen-is-verifiable-jobs.sh
 #   [--input_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>]
-#   [--output_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects-whitelist.csv (by default)>]
+#   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>]
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--input_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>] \
-  [--output_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects-whitelist.csv (by default)>] \
+  [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>] \
   [help]"
 if [ "$#" -ne "0" ] && [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ]; then
   die "$USAGE"
@@ -47,7 +48,7 @@ fi
 echo "[INFO] ${BASH_SOURCE[0]} $@"
 
 INPUT_FILE_PATH="$SCRIPT_DIR/../data/generated/subjects.csv"
-OUTPUT_FILE_PATH="$SCRIPT_DIR/../data/generated/subjects-whitelist.csv"
+OUTPUT_DIR_PATH="$SCRIPT_DIR/../data/generated/is-verifiable"
 
 while [[ "$1" = --* ]]; do
   OPTION=$1; shift
@@ -55,8 +56,8 @@ while [[ "$1" = --* ]]; do
     (--input_file_path)
       INPUT_FILE_PATH=$1;
       shift;;
-    (--output_file_path)
-      OUTPUT_FILE_PATH=$1;
+    (--output_dir_path)
+      OUTPUT_DIR_PATH=$1;
       shift;;
     (--help)
       echo "$USAGE";
@@ -67,20 +68,26 @@ while [[ "$1" = --* ]]; do
 done
 
 # Check whether all arguments have been initialized
-[ "$INPUT_FILE_PATH" != "" ]  || die "[ERROR] Missing --input_file_path argument!"
-[ "$OUTPUT_FILE_PATH" != "" ] || die "[ERROR] Missing --output_file_path argument!"
+[ "$INPUT_FILE_PATH" != "" ] || die "[ERROR] Missing --input_file_path argument!"
+[ "$OUTPUT_DIR_PATH" != "" ] || die "[ERROR] Missing --output_dir_path argument!"
 
 # Check whether some arguments have been correctly initialized
 [ -s "$INPUT_FILE_PATH" ] || die "[ERROR] $INPUT_FILE_PATH does not exist or it is empty!"
 
 # ------------------------------------------------------------------------- Main
 
-# Create output file
-echo "benchmark_name,program_name" > "$OUTPUT_FILE_PATH"
+# Create output directory, if it does not exist
+mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
 
-tmp_log_file="/tmp/collect-whitelist-subjects-verify-$$.log"
-rm -f "$tmp_log_file"
+# Create experiment's directories
+              data_dir_path="$OUTPUT_DIR_PATH/data"
+              logs_dir_path="$OUTPUT_DIR_PATH/logs"
+              jobs_dir_path="$OUTPUT_DIR_PATH/jobs"
+master_job_script_file_path="$SCRIPT_DIR/is-verifiable.sh"
+[ -s "$master_job_script_file_path" ] || die "[ERROR] $master_job_script_file_path does not exist or it is empty!"
+mkdir -p "$data_dir_path" "$logs_dir_path" "$jobs_dir_path"
 
+# Create set of jobs
 while read -r row; do # benchmark_name,program_name
   ben=$(echo "$row" | cut -f1 -d',')
   pid=$(echo "$row" | cut -f2 -d',')
@@ -93,22 +100,25 @@ while read -r row; do # benchmark_name,program_name
   fi
   [ -s "$program_under_test_file_path" ] || die "[ERROR] $program_under_test_file_path does not exist or it is empty!"
 
-  "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$program_under_test_file_path" \
-    --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" > "$tmp_log_file" 2>&1
-  ret="$?"
-  cat "$tmp_log_file"
+     job_data_dir_path="$data_dir_path/$pid"
+      job_log_dir_path="$logs_dir_path/$pid"
+     job_log_file_path="$job_log_dir_path/job.log"
+   job_script_dir_path="$jobs_dir_path/$pid"
+  job_script_file_path="$job_script_dir_path/job.sh"
 
-  if [ "$ret" -ne "0" ]; then
-    echo "[ERROR] Failed to verify $program_under_test_file_path!"
-  elif grep -Eq "^Dafny program verifier finished with 0 verified, 0 errors$" "$tmp_log_file"; then
-    echo "[DEBUG] Nothing has been verified!"
-  else
-    echo "$ben,$pid" >> "$OUTPUT_FILE_PATH"
-  fi
+  mkdir -p "$job_data_dir_path" "$job_log_dir_path" "$job_script_dir_path"
+  touch "$job_log_file_path" "$job_script_file_path"
+
+  echo "#!/usr/bin/env bash" > "$job_script_file_path"
+  echo "#"                  >> "$job_script_file_path"
+  echo "# timefactor:1"     >> "$job_script_file_path"
+  echo "bash $master_job_script_file_path \
+  --benchmark_name \"$ben\" \
+  --input_file_path \"$program_under_test_file_path\" \
+  --output_file_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
 done < <(tail -n +2 "$INPUT_FILE_PATH")
 
-# Clean up
-rm -f "$tmp_log_file"
+echo "Jobs have been created. Please run the $SCRIPT_DIR/../../utils/scripts/run-jobs.sh script on the generated jobs, e.g., $SCRIPT_DIR/../../utils/scripts/run-jobs.sh --jobs_dir_path $OUTPUT_DIR_PATH/jobs."
 
 echo "DONE!"
 exit 0
