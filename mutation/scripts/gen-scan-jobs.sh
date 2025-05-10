@@ -3,12 +3,12 @@
 # ------------------------------------------------------------------------------
 # This script creates as many jobs (where each job executes the [`run-scan.sh`](run-scan.sh)
 # script on a Dafny program and a mutation operator) as the number of Dafny programs
-# defined in [`$SCRIPT_DIR/../../subjects/data/generated/subjects.csv`]($SCRIPT_DIR/../../subjects/data/generated/subjects.csv)
+# defined in [`$SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv`]($SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv)
 # times the number of mutation operators.
 #
 # Usage:
 # gen-scan-jobs.sh
-#   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects.csv (by default)>]
+#   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>]
 #    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL>
 #   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>]
 #   [help]
@@ -34,7 +34,7 @@ DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
-  [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects.csv (by default)>] \
+  [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>] \
    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|CIR|SDL> \
   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>] \
   [help]"
@@ -45,7 +45,7 @@ fi
 # Print out script's arguments (which could help any debug session)
 echo "[INFO] ${BASH_SOURCE[0]} $@"
 
-INPUT_FILE_PATH="$SCRIPT_DIR/../../subjects/data/generated/subjects.csv"
+INPUT_FILE_PATH="$SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv"
 MUTATION_OPERATORS=""
 OUTPUT_DIR_PATH="$SCRIPT_DIR/../data/generated/scan"
 
