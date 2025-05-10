@@ -207,7 +207,7 @@ while read -r script_file_path; do
 
   timefactor=$(grep "^# timefactor:" "$script_file_path" | cut -f2 -d':')
   script_seconds_per_job=$(echo "$SECONDS_PER_JOB * $timefactor" | bc)
-  echo "timeout --signal=SIGTERM ${script_seconds_per_job}s bash $script_file_path" >> "$batch_jobs_file_path"
+  echo "timeout --signal=SIGTERM ${script_seconds_per_job}s bash \"$script_file_path\"" >> "$batch_jobs_file_path"
 
   count_number_jobs_in_batch=$((count_number_jobs_in_batch+1))
   if [ "$count_number_jobs_in_batch" -ge "$number_of_jobs_per_batch" ]; then
