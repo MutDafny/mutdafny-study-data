@@ -101,6 +101,7 @@ while read -r row; do # benchmark_name,program_name
   [ -s "$program_under_test_file_path" ] || die "[ERROR] $program_under_test_file_path does not exist or it is empty!"
 
      job_data_dir_path="$data_dir_path/$pid"
+    job_data_file_path="$job_data_dir_path/data.csv"
       job_log_dir_path="$logs_dir_path/$pid"
      job_log_file_path="$job_log_dir_path/job.log"
    job_script_dir_path="$jobs_dir_path/$pid"
@@ -115,7 +116,7 @@ while read -r row; do # benchmark_name,program_name
   echo "bash $master_job_script_file_path \
   --benchmark_name \"$ben\" \
   --input_file_path \"$program_under_test_file_path\" \
-  --output_file_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
+  --output_file_path \"$job_data_file_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
 done < <(tail -n +2 "$INPUT_FILE_PATH")
 
 echo "Jobs have been created. Please run the $SCRIPT_DIR/../../utils/scripts/run-jobs.sh script on the generated jobs, e.g., $SCRIPT_DIR/../../utils/scripts/run-jobs.sh --jobs_dir_path $OUTPUT_DIR_PATH/jobs."
