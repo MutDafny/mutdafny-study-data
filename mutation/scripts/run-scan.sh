@@ -110,7 +110,7 @@ mkdir -p "$OUTPUT_DIRECTORY_PATH" || die "[ERROR] Failed to create $OUTPUT_DIREC
 rm -rf "$OUTPUT_DIRECTORY_PATH"/* "$OUTPUT_DIRECTORY_PATH"/.* > /dev/null 2>&1
 
 # Temporary log file
-tmp_log_file="$OUTPUT_DIRECTORY_PATH/.tmp_scan.log"
+tmp_log_file="/tmp/run-scan-$$.log"
 rm -f "$tmp_log_file"
 
 pushd . > /dev/null 2>&1

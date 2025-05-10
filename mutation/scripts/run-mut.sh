@@ -121,7 +121,7 @@ cp "$HELPERS_FILE_PATH" "$OUTPUT_DIRECTORY_PATH/helpers.txt"
 mkdir -p $(dirname "$OUTPUT_FILE_PATH")
 echo "benchmark_name,program_name,mutation_position,mutation_operator,mutation,status,parsing_time,plugin_time,resolution_time,verification_time,run_time" > "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to create $OUTPUT_FILE_PATH!"
 
-tmp_log_file="$OUTPUT_DIRECTORY_PATH/.tmp_mut.log"
+tmp_log_file="/tmp/run-mut-$$.log"
 rm -f "$tmp_log_file"
 
 pushd . > /dev/null 2>&1
