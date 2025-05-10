@@ -90,18 +90,15 @@ rm -f "$tmp_log_file"
 start=$(date +%s%3N)
 "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
   --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" > "$tmp_log_file" 2>&1
-ret="$?"
 end=$(date +%s%3N)
 cat "$tmp_log_file"
 
-if [ "$ret" -ne "0" ]; then
-  echo "[ERROR] Failed to verify $INPUT_FILE_PATH!"
-  is_verifiable=0
-elif grep -Eq "^Dafny program verifier finished with 0 verified, 0 errors$" "$tmp_log_file"; then
-  echo "[DEBUG] Nothing has been verified!"
-  is_verifiable=0
-else
+if grep -Eq "^Dafny program verifier finished with [1-9]+ verified, 0 errors" "$tmp_log_file"; then
+  echo "[DEBUG] $INPUT_FILE_PATH is verifiable"
   is_verifiable=1
+else
+  echo "[DEBUG] $INPUT_FILE_PATH is not verifiable"
+  is_verifiable=0
 fi
 
 # Create data file
