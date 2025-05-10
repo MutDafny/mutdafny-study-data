@@ -66,10 +66,10 @@ MUTATION_OPERATOR="BOR"
 To assess whether the running example Dafny program is verifiable one could run the following command:
 
 ```bash
-bash "subjects/scripts/is-verifiable.sh" \
+bash "$(pwd)/subjects/scripts/is-verifiable.sh" \
   --benchmark_name "$BENCHMARK_NAME" \
-  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
-  --output_file_path "subjects/data/generated/is-verifiable/$PROGRAM_NAME/data.csv"
+  --input_file_path "$(pwd)/.third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --output_file_path "$(pwd)/subjects/data/generated/is-verifiable/$PROGRAM_NAME/data.csv"
 ```
 
 which generates one CSV file (Note: the structure of each CVS file is explained in the [subjects/data/FILE-SPECS.md](subjects/data/FILE-SPECS.md) file):
@@ -80,9 +80,9 @@ which generates one CSV file (Note: the structure of each CVS file is explained 
 1. Generate jobs, where each job is the execution of the [`subjects/scripts/is-verifiable.sh`](subjects/scripts/is-verifiable.sh) script on a given Dafny program, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
 
 ```bash
-bash "subjects/scripts/gen-is-verifiable-jobs.sh" \
-  --input_file_path "subjects/data/generated/subjects.csv" \
-  --output_dir_path "subjects/data/generated/is-verifiable"
+bash "$(pwd)/subjects/scripts/gen-is-verifiable-jobs.sh" \
+  --input_file_path "$(pwd)/subjects/data/generated/subjects.csv" \
+  --output_dir_path "$(pwd)/subjects/data/generated/is-verifiable"
 ```
 
 This would generate three top-level directories in the provided output dir (`jobs`, `logs`, and `data`) and create subdirectories, one for each Dafny program, i.e.:
@@ -95,8 +95,8 @@ This would generate three top-level directories in the provided output dir (`job
 2. Run jobs in parallel.
 
 ```bash
-bash "utils/scripts/run-jobs.sh" \
-  --jobs_dir_path "subjects/data/generated/is-verifiable/jobs" \
+bash "$(pwd)/utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "$(pwd)/subjects/data/generated/is-verifiable/jobs" \
   --seconds_per_job 120 \
   --max_number_batches 128 \
   --memory 1024
@@ -107,14 +107,14 @@ This script splits the set of jobs created by the [`subjects/scripts/gen-is-veri
 **Tip:** To compute the number of jobs that finished successfully one could run the following command:
 
 ```bash
-find "subjects/data/generated/is-verifiable/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+find "$(pwd)/subjects/data/generated/is-verifiable/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
 ```
 
 3. Once all jobs have finished successfully one could compute the set of verifiable Dafny programs by running the following command:
 
 ```bash
-echo "benchmark_name,program_name" > "subjects/data/generated/subjects-whitelist.csv"
-find "subjects/data/generated/is-verifiable/data" -type f -name "data.csv" -exec grep "^.*,.*,1,.*$" {} \; | cut -f1,2 -d',' >> "subjects/data/generated/subjects-whitelist.csv"
+echo "benchmark_name,program_name" > "$(pwd)/subjects/data/generated/subjects-whitelist.csv"
+find "$(pwd)/subjects/data/generated/is-verifiable/data" -type f -name "data.csv" -exec grep "^.*,.*,1,.*$" {} \; | cut -f1,2 -d',' >> "$(pwd)/subjects/data/generated/subjects-whitelist.csv"
 ```
 
 ### 1. Generation of mutation targets
@@ -124,11 +124,11 @@ find "subjects/data/generated/is-verifiable/data" -type f -name "data.csv" -exec
 To generate the mutation targets for the running example Dafny program one could run the following command:
 
 ```bash
-bash "mutation/scripts/run-scan.sh" \
+bash "$(pwd)/mutation/scripts/run-scan.sh" \
   --benchmark_name "$BENCHMARK_NAME" \
-  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --input_file_path "$(pwd)/.third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
   --mutation_operator "$MUTATION_OPERATOR" \
-  --output_directory_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
+  --output_directory_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates two CSV files (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
@@ -143,10 +143,10 @@ and one helper file (later used in the mutation analysis):
 1. Generate jobs, where each job is the execution of the [`mutation/scripts/run-scan.sh`](mutation/scripts/run-scan.sh) script on a given Dafny program and mutation operator, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
 
 ```bash
-bash "mutation/scripts/gen-scan-jobs.sh" \
-  --input_file_path "subjects/data/generated/subjects-whitelist.csv" \
+bash "$(pwd)/mutation/scripts/gen-scan-jobs.sh" \
+  --input_file_path "$(pwd)/subjects/data/generated/subjects-whitelist.csv" \
   --mutation_operators "BOR,BBR,UOI,UOD,LVR,EVR,LSR,LBI,MCR,CIR,SDL" \
-  --output_dir_path "mutation/data/generated/scan"
+  --output_dir_path "$(pwd)/mutation/data/generated/scan"
 ```
 
 This would generate three top-level directories in the provided output dir (`jobs`, `logs`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
@@ -159,8 +159,8 @@ This would generate three top-level directories in the provided output dir (`job
 2. Run jobs in parallel.
 
 ```bash
-bash "utils/scripts/run-jobs.sh" \
-  --jobs_dir_path "mutation/data/generated/scan/jobs" \
+bash "$(pwd)/utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "$(pwd)/mutation/data/generated/scan/jobs" \
   --seconds_per_job 60 \
   --max_number_batches 128 \
   --memory 1024
@@ -171,15 +171,15 @@ This script splits the set of jobs created by the [`mutation/scripts/gen-scan-jo
 **Tip:** To compute the number of jobs that finished successfully one could run the following command:
 
 ```bash
-find "mutation/data/generated/scan/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+find "$(pwd)/mutation/data/generated/scan/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
 ```
 
 **Tip:** If some jobs finished unsuccessfully due to cluster's timeouts or simply because they ran out of memory, you could re-run the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script with a different time/memory value. (Note: the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script would only re-run jobs that finished unsuccessfully.)
 For example, twice the time and memory per job:
 
 ```bash
-bash "utils/scripts/run-jobs.sh" \
-  --jobs_dir_path "mutation/data/generated/scan/jobs" \
+bash "$(pwd)/utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "$(pwd)/mutation/data/generated/scan/jobs" \
   --seconds_per_job 120 \
   --max_number_batches 128 \
   --memory 2048
@@ -192,13 +192,13 @@ bash "utils/scripts/run-jobs.sh" \
 The script to run mutation analysis are very similar to the ones to generate of mutation targets. To run mutation analysis for the running example Dafny program one could run the following command:
 
 ```bash
-bash "mutation/scripts/run-mut.sh" \
+bash "$(pwd)/mutation/scripts/run-mut.sh" \
   --benchmark_name "$BENCHMARK_NAME" \
-  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
-  --targets_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv" \
-  --helpers_file_path "mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt" \
-  --output_file_path "mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv" \
-  --output_directory_path "mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
+  --input_file_path "$(pwd)/.third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --targets_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv" \
+  --helpers_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt" \
+  --output_file_path "$(pwd)/mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv" \
+  --output_directory_path "$(pwd)/mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates one CSV file (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
@@ -211,11 +211,11 @@ and .dfy files in the provided output directory, one per mutant generated by Mut
 1. Generate jobs, where each job is the execution of the [`mutation/scripts/run-mut.sh`](mutation/scripts/run-mut.sh) script on a given Dafny program and mutation operator, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
 
 ```bash
-bash "mutation/scripts/gen-mut-jobs.sh" \
-  --input_file_path "subjects/data/generated/subjects-whitelist.csv" \
-  --mutation_operators "BOR,BBR,UOI,UOD,LVR,EVR,LSR,LBI,MCR,CIR,SDL" \
-  --scan_dir_path "mutation/data/generated/scan" \
-  --output_dir_path "mutation/data/generated/mut"
+bash "$(pwd)/mutation/scripts/gen-mut-jobs.sh" \
+  --input_file_path "$(pwd)/subjects/data/generated/subjects-whitelist.csv" \
+  --mutation_operators "BOR,BBR,UOI,UOD,LVR,EVR,LSR,LBI,CIR,SDL" \
+  --scan_dir_path "$(pwd)/mutation/data/generated/scan" \
+  --output_dir_path "$(pwd)/mutation/data/generated/mut"
 ```
 
 This would generate four top-level directories in the provided output dir (`jobs`, `logs`, `mutants`, and `data`) and create subdirectories, one for each combination of mutation operator and Dafny program, i.e.:
@@ -229,8 +229,8 @@ This would generate four top-level directories in the provided output dir (`jobs
 2. Run jobs in parallel.
 
 ```bash
-bash "utils/scripts/run-jobs.sh" \
-  --jobs_dir_path "mutation/data/generated/mut/jobs" \
+bash "$(pwd)/utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "$(pwd)/mutation/data/generated/mut/jobs" \
   --seconds_per_job 60 \
   --max_number_batches 128 \
   --memory 1024
@@ -241,15 +241,15 @@ This script splits the set of jobs created by the [`mutation/scripts/gen-mut-job
 **Tip:** To compute the number of jobs that finished successfully one could run the following command:
 
 ```bash
-find "mutation/data/generated/mut/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+find "$(pwd)/mutation/data/generated/mut/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
 ```
 
 **Tip:** If some jobs finished unsuccessfully due to cluster's timeouts or simply because they ran out of memory, you could re-run the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script with a different time/memory value. (Note: the [`utils/scripts/run-jobs.sh`](utils/scripts/run-jobs.sh) script would only re-run jobs that finished unsuccessfully.)
 For example, twice the time and memory per job:
 
 ```bash
-bash "utils/scripts/run-jobs.sh" \
-  --jobs_dir_path "mutation/data/generated/mut/jobs" \
+bash "$(pwd)/utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "$(pwd)/mutation/data/generated/mut/jobs" \
   --seconds_per_job 120 \
   --max_number_batches 128 \
   --memory 2048

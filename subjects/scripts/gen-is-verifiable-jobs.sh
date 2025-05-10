@@ -7,8 +7,8 @@
 #
 # Usage:
 # gen-is-verifiable-jobs.sh
-#   [--input_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>]
-#   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>]
+#   [--input_file_path <full path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>]
+#   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>]
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
-  [--input_file_path <path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>] \
-  [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>] \
+  [--input_file_path <full path, e.g., $SCRIPT_DIR/../data/generated/subjects.csv (by default)>] \
+  [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable (by default)>] \
   [help]"
 if [ "$#" -ne "0" ] && [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ]; then
   die "$USAGE"

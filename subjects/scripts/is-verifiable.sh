@@ -8,7 +8,7 @@
 # is-verifiable.sh
 #   [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>]
 #   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy>
-#   --output_file_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/data.csv>
+#   --output_file_path <full path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/data.csv>
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--benchmark_name <name of the benchmark, e.g., DafnyBench (by default)>] \
   --input_file_path <full path to a Dafny program, e.g., $SCRIPT_DIR/../../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy> \
-  --output_file_path <path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/data.csv> \
+  --output_file_path <full path, e.g., $SCRIPT_DIR/../data/generated/is-verifiable/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/data.csv> \
   [help]"
 if [ "$#" -ne "1" ] && [ "$#" -ne "4" ] && [ "$#" -ne "6" ]; then
   die "$USAGE"

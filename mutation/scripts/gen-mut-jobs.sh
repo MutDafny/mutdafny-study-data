@@ -8,10 +8,10 @@
 #
 # Usage:
 # gen-mut-jobs.sh
-#   [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>]
+#   [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>]
 #    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|MCR|CIR|SDL>
-#    --scan_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan>
-#   [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>]
+#    --scan_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan>
+#   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>]
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -35,10 +35,10 @@ DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 # ------------------------------------------------------------------------- Args
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
-  [--input_file_path <path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>] \
+  [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>] \
    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|LSR|LBI|MCR|CIR|SDL> \
-   --scan_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/scan> \
-  [--output_dir_path <path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>] \
+   --scan_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan> \
+  [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>] \
   [help]"
 if [ "$#" -ne "1" ] && [ "$#" -ne "4" ] && [ "$#" -ne "6" ] && [ "$#" -ne "8" ]; then
   die "$USAGE"

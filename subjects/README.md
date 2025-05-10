@@ -18,9 +18,9 @@ A total of 785 programs from the [DafnyBench](https://github.com/sun-wendy/Dafny
 Usage example:
 
 ```bash
-bash scripts/is-verifiable.sh \
-  --input_file_path ../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy \
-  --output_file_path data/generated/is-verifiable/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/data.csv
+bash "scripts/is-verifiable.sh" \
+  --input_file_path "$(pwd)/../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy" \
+  --output_file_path "$(pwd)/data/generated/is-verifiable/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/data.csv"
 ```
 
 **Note:** The script [`scripts/gen-is-verifiable-jobs.sh`](scripts/gen-is-verifiable-jobs.sh) automatizes the process of running the [`scripts/is-verifiable.sh`](scripts/is-verifiable.sh) script on **all** programs listed in [`data/generated/subjects.csv`](data/generated/subjects.csv)
