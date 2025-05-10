@@ -52,12 +52,70 @@ Visit the [INSTALL.md](INSTALL.md) file for more details.
 Below you might find the step-by-step on how to execute the experiments described in our study for a single Dafny program and for **all** programs listed in [`subjects/data/generated/subjects.csv`](subjects/data/generated/subjects.csv). For the single Dafny program's step-by-step, start by initializing the following variables:
 
 ```bash
+BENCHMARK_NAME="DafnyBench"
 PROGRAM_NAME="630-dafny_tmp_tmpz2kokaiq_Solution"
 MUTATION_OPERATOR="BOR"
 ```
 
 **Note:** the step-by-step assumes you are running commands from the repository's root directory.
 
+### 0. Verifiable Dafny programs
+
+<!-- TODO: briefly describe why we need to perform this -->
+
+To assess whether the running example Dafny program is verifiable one could run the following command:
+
+```bash
+bash "subjects/scripts/is-verifiable.sh" \
+  --benchmark_name "$BENCHMARK_NAME" \
+  --input_file_path ".third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
+  --output_file_path "subjects/data/generated/is-verifiable/$PROGRAM_NAME/data.csv"
+```
+
+which generates one CSV file (Note: the structure of each CVS file is explained in the [subjects/data/FILE-SPECS.md](subjects/data/FILE-SPECS.md) file):
+- `subjects/data/generated/is-verifiable/$PROGRAM_NAME/data.csv`, runtime data of the execution of Dafny's `verify` command.
+
+**Note:** The script [`subjects/scripts/gen-is-verifiable-jobs.sh`](subjects/scripts/gen-is-verifiable-jobs.sh) automatizes the process of running Dafny's `verify` command on **all** programs listed in [`subjects/data/generated/subjects.csv`](subjects/data/generated/subjects.csv). For instance,
+
+1. Generate jobs, where each job is the execution of the [`subjects/scripts/is-verifiable.sh`](subjects/scripts/is-verifiable.sh) script on a given Dafny program, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
+
+```bash
+bash "subjects/scripts/gen-is-verifiable-jobs.sh" \
+  --input_file_path "subjects/data/generated/subjects.csv" \
+  --output_dir_path "subjects/data/generated/is-verifiable"
+```
+
+This would generate three top-level directories in the provided output dir (`jobs`, `logs`, and `data`) and create subdirectories, one for each Dafny program, i.e.:
+- `jobs/<Dafny program name>/`
+  * `jobs/<Dafny program name>/job.sh` which runs `subjects/scripts/is-verifiable.sh`.
+- `logs/<Dafny program name>/`
+  * `logs/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
+- `data/<Dafny program name>/`
+
+2. Run jobs in parallel.
+
+```bash
+bash "utils/scripts/run-jobs.sh" \
+  --jobs_dir_path "subjects/data/generated/is-verifiable/jobs" \
+  --seconds_per_job 120 \
+  --max_number_batches 128 \
+  --memory 1024
+```
+
+This script splits the set of jobs created by the [`subjects/scripts/gen-is-verifiable-jobs.sh`](subjects/scripts/gen-is-verifiable-jobs.sh) script in batches (as some clusters might have a hard limit) and either run them using [GNU Parallel](https://www.gnu.org/software/parallel) or submit them to the cluster's workload manager, i.e., [Slurm](https://slurm.schedmd.com). If the machine supports the [Slurm](https://slurm.schedmd.com) workload manager, jobs are submitted to it. If not, jobs are executed using [GNU Parallel](https://www.gnu.org/software/parallel).
+
+**Tip:** To compute the number of jobs that finished successfully one could run the following command:
+
+```bash
+find "subjects/data/generated/is-verifiable/logs" -type f -name "job.log" -exec grep -l "^DONE" {} \; | wc -l
+```
+
+3. Once all jobs have finished successfully one could compute the set of verifiable Dafny programs by running the following command:
+
+```bash
+echo "benchmark_name,program_name" > "subjects/data/generated/subjects-whitelist.csv"
+find "subjects/data/generated/is-verifiable/data" -type f -name "data.csv" -exec grep "^.*,.*,1,.*$" {} \; | cut -f1,2 -d',' >> "subjects/data/generated/subjects-whitelist.csv"
+```
 
 ### 1. Generation of mutation targets
 
