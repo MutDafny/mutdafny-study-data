@@ -132,11 +132,11 @@ bash "$(pwd)/mutation/scripts/run-scan.sh" \
 ```
 
 which generates two CSV files (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv`, set of mutation targets.
+- `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
+- `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv`, set of mutation targets.
 
 and one helper file (later used in the mutation analysis):
-- `data/generated/scan/stats/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
+- `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
 
 **Note:** The script [`mutation/scripts/gen-scan-jobs.sh`](mutation/scripts/gen-scan-jobs.sh) automatizes the process of running MutDafny's `scan` command on **all** programs listed in [`subjects/data/generated/subjects-whitelist.csv`](subjects/data/generated/subjects-whitelist.csv) on one or more mutation operators. For instance,
 
