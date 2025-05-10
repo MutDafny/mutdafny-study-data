@@ -108,7 +108,7 @@ fi
 mkdir -p $(dirname "$OUTPUT_FILE_PATH")
 echo "benchmark_name,program_name,is_verifiable,runtime" > "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to create $OUTPUT_FILE_PATH!"
 # Populate it
-echo "$BENCHMARK_NAME,$(basename $INPUT_FILE_PATH .dfy),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
+echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
 
 # Clean up
 rm -f "$tmp_log_file"

@@ -162,7 +162,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
     fi
 
     # Save runtime data
-    echo "$(basename $INPUT_FILE_PATH .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    echo "$(basename "$INPUT_FILE_PATH" .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
   done < <(cat "$TARGETS_FILE_PATH")
 
 popd > /dev/null 2>&1
