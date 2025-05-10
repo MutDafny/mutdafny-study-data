@@ -109,13 +109,22 @@ mkdir -p "$OUTPUT_DIRECTORY_PATH" || die "[ERROR] Failed to create $OUTPUT_DIREC
 # Clean up output directory
 rm -rf "$OUTPUT_DIRECTORY_PATH"/* "$OUTPUT_DIRECTORY_PATH"/.* > /dev/null 2>&1
 
+# Temporary log file
+tmp_log_file="$OUTPUT_DIRECTORY_PATH/.tmp_scan.log"
+rm -f "$tmp_log_file"
+
 pushd . > /dev/null 2>&1
 cd "$OUTPUT_DIRECTORY_PATH"
   start=$(date +%s%3N)
   "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
     --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
-    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR" || die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
+    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR" > "$tmp_log_file" 2>&1
   end=$(date +%s%3N)
+  cat "$tmp_log_file"
+
+  if ! grep -Eq "^Dafny program verifier finished with [1-9]+ verified, 0 errors" "$tmp_log_file"; then
+    die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
+  fi
 
   elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
   [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
@@ -148,6 +157,9 @@ cd "$OUTPUT_DIRECTORY_PATH"
 
   rm -f "$elapsed_time_file"
 popd > /dev/null 2>&1
+
+# Clean up
+rm -f "$tmp_log_file"
 
 echo "[INFO] Job finished at $(date)"
 echo "DONE!"
