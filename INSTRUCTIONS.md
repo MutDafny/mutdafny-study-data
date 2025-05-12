@@ -113,7 +113,7 @@ find "$(pwd)/subjects/data/generated/is-verifiable/logs" -type f -name "job.log"
 3. Once all jobs have finished successfully one could compute the set of verifiable Dafny programs by running the following command:
 
 ```bash
-echo "benchmark_name,program_name" > "$(pwd)/subjects/data/generated/subjects-whitelist.csv"
+echo "benchmark_name,program_name" > "$(pwd)/subjects/data/generated/subjects-whitelist.csv"; \
 find "$(pwd)/subjects/data/generated/is-verifiable/data" -type f -name "data.csv" -exec grep "^.*,.*,1,.*$" {} \; | cut -f1,2 -d',' >> "$(pwd)/subjects/data/generated/subjects-whitelist.csv"
 ```
 
