@@ -156,16 +156,16 @@ cd "$OUTPUT_DIRECTORY_PATH"
     fi
     echo "[DEBUG] Mutant $row $status"
 
-    if [ "$status" == "invalid" ]; then
-      # invalid mutants do not produce an elapsed-time.csv file
-      elapsed_times=",,,"
-    else
-      elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
-      [ -s "$elapsed_time_file" ] || die "[ERROR] $elapsed_time_file does not exist or it is empty!"
+    elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
+    if [ -s "$elapsed_time_file" ]; then
       echo "[DEBUG] $elapsed_time_file:"
       cat "$elapsed_time_file"
       elapsed_times=$(tail -n1 "$elapsed_time_file")
       rm -f "$elapsed_time_file"
+    else
+      # no elapsed-time.csv file
+      echo "[DEBUG] $elapsed_time_file does not exist or it is empty!"
+      elapsed_times=",,,"
     fi
 
     # Save runtime data
