@@ -141,13 +141,13 @@ cd "$OUTPUT_DIRECTORY_PATH"
     end=$(date +%s%3N)
     cat "$tmp_log_file"
 
-    if grep -Eq   "^Dafny program verifier finished with [1-9]+ verified, 0 errors$" "$tmp_log_file"; then
+    if grep -Eq   "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors$" "$tmp_log_file"; then
       status="survived"
-    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, 0 errors, [1-9]+ time out[s]?$" "$tmp_log_file"; then
+    elif grep -Eq "^Dafny program verifier finished with [0-9][0-9]* verified, 0 errors, [1-9][0-9]* time out[s]?$" "$tmp_log_file"; then
       status="timeout"
-    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, [1-9]+ error[s]?$" "$tmp_log_file"; then
+    elif grep -Eq "^Dafny program verifier finished with [0-9][0-9]* verified, [1-9][0-9]* error[s]?$" "$tmp_log_file"; then
       status="killed"
-    elif grep -Eq "^Dafny program verifier finished with [0-9]+ verified, [1-9]+ error[s]?, [1-9]+ time out[s]?$" "$tmp_log_file"; then
+    elif grep -Eq "^Dafny program verifier finished with [0-9][0-9]* verified, [1-9][0-9]* error[s]?, [1-9][0-9]* time out[s]?$" "$tmp_log_file"; then
       status="killed"
     elif grep -Eq "^Dafny program verifier finished with 0 verified, 0 errors$" "$tmp_log_file"; then
       status="invalid"

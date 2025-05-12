@@ -93,7 +93,7 @@ start=$(date +%s%3N)
 end=$(date +%s%3N)
 cat "$tmp_log_file"
 
-if grep -Eq "^Dafny program verifier finished with [1-9]+ verified, 0 errors" "$tmp_log_file"; then
+if grep -Eq "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors" "$tmp_log_file"; then
   echo "[DEBUG] $INPUT_FILE_PATH is verifiable"
   is_verifiable=1
 else

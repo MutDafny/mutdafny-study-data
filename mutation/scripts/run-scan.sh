@@ -122,7 +122,7 @@ cd "$OUTPUT_DIRECTORY_PATH"
   end=$(date +%s%3N)
   cat "$tmp_log_file"
 
-  if ! grep -Eq "^Dafny program verifier finished with [1-9]+ verified, 0 errors" "$tmp_log_file"; then
+  if ! grep -Eq "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors" "$tmp_log_file"; then
     die "[ERROR] Failed to run MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH!"
   fi
 
