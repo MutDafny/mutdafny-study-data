@@ -10,6 +10,7 @@
 # ------------------------------------------------------------------------------
 
 source('../../utils/statistics/utils.R')
+library('dplyr')
 library('ggplot2')
 library('ggbeeswarm')
 library('scales')
@@ -46,6 +47,61 @@ df <- merge(scan_data, mut_data, by=c('benchmark_name', 'program_name', 'mutatio
 df$'runtime' <- df$'scan_time' + df$'mut_time' - df$'verification_time'
 # Convert milliseconds to seconds
 df$'runtime' <- df$'runtime' * 0.001
+
+# -------- Overall
+
+OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-mutants-gen.pdf')
+
+# Remove any existing output file and create a new one
+unlink(OUTPUT_FILE_PATH)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2)
+
+# Compute runtime per program
+runtimes_df <- df %>%
+  dplyr::group_by(benchmark_name, program_name) %>%
+  dplyr::summarise(
+    total = n(),
+    runtimes = sum(runtime),
+    time = runtimes / total
+  )
+
+print(summary(runtimes_df$'time'))
+print(runtimes_df[runtimes_df$'time' == min(runtimes_df$'time'), ])
+
+# Calculate mean, median, and max runtimes
+mean_time   <- mean(runtimes_df$'time')
+median_time <- median(runtimes_df$'time')
+max_time    <- max(runtimes_df$'time')
+
+p <- ggplot(runtimes_df, aes(y=time)) + geom_boxplot()
+# Horizontal box plot
+p <- p + coord_flip()
+# Scale y-axis
+p <- p + scale_y_log10(
+  breaks=scales::log_breaks(base=10, n=12),
+  labels=scales::label_comma()
+)
+# Set labs
+p <- p + labs(x='', y='Runtime (seconds, log10 scale)')
+# Remove axis
+p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
+# Add text values
+p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
+           label=paste0(#
+             'Median = ', sprintf('%.2f', round(mean_time, 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max_time, 2))
+           ),
+           size=4, color='black')
+# Print plot
+print(p)
+
+# Close output file
+dev.off()
+# Embed fonts
+embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
+
+# -------- Per mutation operator
 
 OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-runtime-mutants-gen.pdf')
 
