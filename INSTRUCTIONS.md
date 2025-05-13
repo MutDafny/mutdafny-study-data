@@ -128,7 +128,7 @@ bash "$(pwd)/mutation/scripts/run-scan.sh" \
   --benchmark_name "$BENCHMARK_NAME" \
   --input_file_path "$(pwd)/.third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
   --mutation_operator "$MUTATION_OPERATOR" \
-  --output_directory_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
+  --output_dir_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates two CSV files (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):
@@ -198,7 +198,7 @@ bash "$(pwd)/mutation/scripts/run-mut.sh" \
   --targets_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv" \
   --helpers_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt" \
   --output_file_path "$(pwd)/mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv" \
-  --output_directory_path "$(pwd)/mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
+  --output_dir_path "$(pwd)/mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
 
 which generates one CSV file (Note: the structure of each CVS file is explained in the [mutation/data/FILE-SPECS.md](mutation/data/FILE-SPECS.md) file):

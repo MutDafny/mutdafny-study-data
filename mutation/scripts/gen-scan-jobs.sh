@@ -122,7 +122,7 @@ while read -r row; do # benchmark_name,program_name
   --benchmark_name \"$ben\" \
   --input_file_path \"$program_under_test_file_path\" \
   --mutation_operator \"$op\" \
-  --output_directory_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
+  --output_dir_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
   done
 done < <(tail -n +2 "$INPUT_FILE_PATH")
 
