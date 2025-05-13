@@ -53,7 +53,7 @@ replace_string <- function(string, find, replace) {
 #
 # Wrapper function for the official embed_fonts function.
 #
-set_fonts <- function(filename) {
+embed_fonts_in_a_pdf <- function(filename) {
   library('extrafont') # install.packages('extrafont')
   embed_fonts(filename, options="-dSubsetFonts=true -dEmbedAllFonts=true -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -dMaxSubsetPct=100")
 }
