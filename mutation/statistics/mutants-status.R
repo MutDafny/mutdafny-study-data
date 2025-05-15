@@ -111,12 +111,14 @@ kill_ratios <- df %>%
     score = killed / total * 100.0
   )
 
-print(summary(kill_ratios$'score'))
-print(kill_ratios[kill_ratios$'score' == min(kill_ratios$'score'), ])
-
 # Calculate mean, median, and max mutation score
 mean_score   <- mean(kill_ratios$'score')
 median_score <- median(kill_ratios$'score')
+
+print(summary(kill_ratios$'score'))
+print(kill_ratios[kill_ratios$'score' == min(kill_ratios$'score'), ])
+print(kill_ratios[kill_ratios$'score' >= mean_score, ])
+print(kill_ratios[kill_ratios$'score' == 100, ])
 
 p <- ggplot(kill_ratios, aes(y=score)) + geom_boxplot()
 # Horizontal box plot
