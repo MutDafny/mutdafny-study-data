@@ -17,6 +17,8 @@ source "$SCRIPT_DIR/../utils/scripts/utils.sh" || exit 1
 SUBJECTS_FILE="$SCRIPT_DIR/../subjects/data/generated/subjects.csv"
 echo "benchmark_name,program_name" > "$SUBJECTS_FILE" || die "[ERROR] Failed to create $SUBJECTS_FILE!"
 
+host_name=$(hostname)
+
 # ------------------------------------------------------------------------- Deps
 
 # Check whether 'wget' is available
@@ -29,7 +31,12 @@ git --version > /dev/null 2>&1 || die "[ERROR] Could not find 'git' to clone git
 parallel --version > /dev/null 2>&1 || die "[ERROR] Could not find 'parallel' to run experiments/scripts in parallel. Please install 'GNU Parallel' and re-run the script."
 
 # Check whether 'Rscript' is available
-Rscript --version > /dev/null 2>&1 || die "[ERROR] Could not find 'Rscript' to perform, e.g., statistical analysis. Please install 'Rscript' and re-run the script."
+if [ "$host_name" != "submit.grid.up.pt" ]; then
+  Rscript --version > /dev/null 2>&1 || die "[ERROR] Could not find 'Rscript' to perform, e.g., statistical analysis. Please install 'Rscript' and re-run the script."
+fi
+
+# Check whether 'unzip' is available, if not, try to use 'busybox unzip'
+unzip -v > /dev/null 2>&1 || alias unzip='busybox unzip'
 
 # ------------------------------------------------------------------------- Main
 
@@ -171,7 +178,9 @@ popd > /dev/null 2>&1
 echo ""
 echo "Setting up R..."
 
-Rscript "$SCRIPT_DIR/get-libraries.R" "$SCRIPT_DIR" || die "[ERROR] Failed to install/load all required R packages!"
+if [ "$host_name" != "submit.grid.up.pt" ]; then
+  Rscript "$SCRIPT_DIR/get-libraries.R" "$SCRIPT_DIR" || die "[ERROR] Failed to install/load all required R packages!"
+fi
 
 echo ""
 echo "DONE! All third parties have been successfully installed and configured."
