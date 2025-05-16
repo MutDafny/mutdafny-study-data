@@ -10,8 +10,12 @@ The top-level directory [`.third-parties/`](.third-parties/) provides a script n
 - Get and build [MutDafny](https://github.com/MutDafny/mutdafny).
 - Installing the following [R](https://www.r-project.org)'s packages under user's R's library directory through the [`get-libraries.R`](get-libraries.R) script:
   * [data.table: Extension of 'data.frame'](https://cran.r-project.org/web/packages/data.table/index.html)
+  * [dplyr: A Grammar of Data Manipulation](https://cran.r-project.org/web/packages/dplyr/index.html)
   * [stringr: Simple, Consistent Wrappers for Common String Operations](https://cran.r-project.org/web/packages/stringr/index.html)
+  * [extrafont: Tools for Using Fonts](https://cran.r-project.org/web/packages/extrafont/index.html)
   * [ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics](https://cran.r-project.org/web/packages/ggplot2/index.html)
+  * [ggbeeswarm: Categorical Scatter (Violin Point) Plots](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
+  * [scales: Scale Functions for Visualization](https://cran.r-project.org/web/packages/scales/index.html)
 
 and it can be executed as:
 

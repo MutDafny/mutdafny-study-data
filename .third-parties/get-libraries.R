@@ -13,11 +13,18 @@ repository <- 'https://cloud.r-project.org'
 # Install and load packages (aka runtime sanity check)
 install.packages('data.table', lib=local_library, repos=repository)
 library('data.table', lib.loc=local_library)
+install.packages('dplyr', lib=local_library, repos=repository)
+library('dplyr', lib.loc=local_library)
 install.packages('stringr', lib=local_library, repos=repository)
 library('stringr', lib.loc=local_library)
+install.packages('extrafont')
+library('extrafont', lib.loc=local_library)
 install.packages('ggplot2', lib=local_library, repos=repository) # required by caret
 library('ggplot2', lib.loc=local_library)
-
+install.packages('ggbeeswarm', lib=local_library, repos=repository)
+library('ggbeeswarm', lib.loc=local_library)
+install.packages('scales', lib=local_library, repos=repository)
+library('scales', lib.loc=local_library)
 # Exit
 quit(save='no', status=0)
 
