@@ -133,13 +133,14 @@ cd "$OUTPUT_DIR_PATH"
     arg=$(echo "$row" | cut -f3 -d',') # Some mutation operators do not have a third element
     echo "[DEBUG] Mutant $row"
 
+    exec 2>/dev/null  # Redirect shell errors
     start=$(date +%s%3N)
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
         --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
         --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" > "$tmp_log_file" 2>&1
     ret="$?"
     end=$(date +%s%3N)
-    cat "$tmp_log_file"
+    exec 2>&1
 
     if grep -Eq   "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors$" "$tmp_log_file"; then
       status="survived"
@@ -156,6 +157,14 @@ cd "$OUTPUT_DIR_PATH"
     else
       die "[ERROR] Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row! (return code: $ret)"
     fi
+
+    if [ "$status" != "invalid" ]; then 
+      cat "$tmp_log_file"
+    else
+      filename=$(basename $INPUT_FILE_PATH .dfy)
+      rm "${filename}_${pos}_${ope}_${arg}.dfy" 2>/dev/null
+      rm "${filename}_${pos}_${ope}.dfy" 2>/dev/null
+    fi
     echo "[DEBUG] Mutant $row $status"
 
     elapsed_time_file="elapsed-time.csv" # parsing_time,plugin_time,resolution_time,verification_time
@@ -169,6 +178,7 @@ cd "$OUTPUT_DIR_PATH"
       echo "[DEBUG] $elapsed_time_file does not exist or it is empty!"
       elapsed_times=",,,"
     fi
+    echo
 
     # Save runtime data
     echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
