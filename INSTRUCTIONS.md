@@ -135,9 +135,6 @@ which generates two CSV files (Note: the structure of each CVS file is explained
 - `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv`, runtime data of the execution of MutDafny's `scan` command.
 - `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv`, set of mutation targets.
 
-and one helper file (later used in the mutation analysis):
-- `data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt`. <!-- TODO: add a brief description -->
-
 **Note:** The script [`mutation/scripts/gen-scan-jobs.sh`](mutation/scripts/gen-scan-jobs.sh) automatizes the process of running MutDafny's `scan` command on **all** programs listed in [`subjects/data/generated/subjects-whitelist.csv`](subjects/data/generated/subjects-whitelist.csv) on one or more mutation operators. For instance,
 
 1. Generate jobs, where each job is the execution of the [`mutation/scripts/run-scan.sh`](mutation/scripts/run-scan.sh) script on a given Dafny program and mutation operator, to be executed in parallel either using [GNU Parallel](https://www.gnu.org/software/parallel) or [Slurm](https://slurm.schedmd.com).
@@ -196,7 +193,6 @@ bash "$(pwd)/mutation/scripts/run-mut.sh" \
   --benchmark_name "$BENCHMARK_NAME" \
   --input_file_path "$(pwd)/.third-parties/dafnybench/DafnyBench/dataset/ground_truth/$PROGRAM_NAME.dfy" \
   --targets_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/targets.csv" \
-  --helpers_file_path "$(pwd)/mutation/data/generated/scan/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/helpers.txt" \
   --output_file_path "$(pwd)/mutation/data/generated/mut/data/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/data.csv" \
   --output_dir_path "$(pwd)/mutation/data/generated/mut/mutants/$MUTATION_OPERATOR/$BENCHMARK_NAME/$PROGRAM_NAME/"
 ```
