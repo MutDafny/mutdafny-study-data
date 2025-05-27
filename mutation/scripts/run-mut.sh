@@ -120,6 +120,7 @@ cd "$OUTPUT_DIR_PATH"
     pos=$(echo "$row" | cut -f1 -d',')
     ope=$(echo "$row" | cut -f2 -d',')
     arg=$(echo "$row" | cut -f3 -d',') # Some mutation operators do not have a third element
+    echo ""
     echo "[DEBUG] Mutant $row"
 
     start=$(date +%s%3N)
@@ -162,7 +163,6 @@ cd "$OUTPUT_DIR_PATH"
       echo "[DEBUG] $elapsed_time_file does not exist or it is empty!"
       elapsed_times=",,,"
     fi
-    echo
 
     # Save runtime data
     echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
