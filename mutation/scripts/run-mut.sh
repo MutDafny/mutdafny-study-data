@@ -122,14 +122,11 @@ cd "$OUTPUT_DIR_PATH"
     arg=$(echo "$row" | cut -f3 -d',') # Some mutation operators do not have a third element
     echo "[DEBUG] Mutant $row"
 
-    exec 2>/dev/null  # Redirect shell errors
     start=$(date +%s%3N)
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
         --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
-        --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" > "$tmp_log_file" 2>&1
-    ret="$?"
+        --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" 2>&1 | tee "$tmp_log_file"
     end=$(date +%s%3N)
-    exec 2>&1
 
     if grep -Eq   "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors$" "$tmp_log_file"; then
       status="survived"
@@ -144,12 +141,10 @@ cd "$OUTPUT_DIR_PATH"
     elif ! grep -q "^Dafny program verifier finished" "$tmp_log_file"; then
       status="invalid"
     else
-      die "[ERROR] Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row! (return code: $ret)"
+      die "[ERROR] Either a unsupported 'Dafny program verifier' message or MutDafny's failed to run on $row!"
     fi
 
-    if [ "$status" != "invalid" ]; then 
-      cat "$tmp_log_file"
-    else
+    if [ "$status" == "invalid" ]; then
       filename=$(basename "$INPUT_FILE_PATH" .dfy)
       rm "${filename}_${pos}_${ope}_${arg}.dfy" 2>/dev/null
       rm "${filename}_${pos}_${ope}.dfy" 2>/dev/null
