@@ -83,7 +83,7 @@ extract_commits_matching_pattern() {
     echo "$commit_url,$num_dafny_files_in_the_commit,$stats" >> "$OUTPUT_FILE_PATH"
 
     count=$((count + 1))
-  done < <(git log --all -i --until="2025-03-02" --grep="$pattern" --pretty=format:'%H') # Get all commits hash that contain '$pattern' in the commit message
+  done < <(git log --all -i --until="2025-03-02" --grep="$pattern" --pretty=format:'%H' | sed '${/^$/!s/$/\n/}') # Get all commits hash that contain '$pattern' in the commit message
 
   echo "$count"
   return 0
