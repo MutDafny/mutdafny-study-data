@@ -150,7 +150,7 @@ cd "$OUTPUT_DIR_PATH"
     if [ "$status" != "invalid" ]; then 
       cat "$tmp_log_file"
     else
-      filename=$(basename $INPUT_FILE_PATH .dfy)
+      filename=$(basename "$INPUT_FILE_PATH" .dfy)
       rm "${filename}_${pos}_${ope}_${arg}.dfy" 2>/dev/null
       rm "${filename}_${pos}_${ope}.dfy" 2>/dev/null
     fi
