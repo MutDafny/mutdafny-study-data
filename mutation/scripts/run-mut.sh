@@ -170,6 +170,9 @@ cd "$OUTPUT_DIR_PATH"
 
 popd > /dev/null 2>&1
 
+# Remove temporary file
+rm -f "$tmp_log_file"
+
 echo "[INFO] Job finished at $(date)"
 echo "DONE!"
 exit 0
