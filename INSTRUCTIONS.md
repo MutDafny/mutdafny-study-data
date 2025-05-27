@@ -268,3 +268,45 @@ bash "$(pwd)/utils/scripts/collect-data.sh" \
   --file_pattern "data.csv" \
   --output_file_path "$(pwd)/mutation/data/generated/mut-data.csv"
 ```
+
+### 3. Data analysis
+
+1. Plot the distribution number of mutants per mutation operator. The [`mutation/statistics/mutants.R`](mutation/statistics/mutants.R) generates one PDF file in the provided directory:
+
+- `distribution-number-mutants-per-operator.pdf`, distribution number of mutants per mutation operator
+
+```bash
+cd "$(pwd)/mutation/statistics"
+
+Rscript mutants.R \
+  "$(pwd)/../data/generated/mut-data.csv" \
+  "$(pwd)/../data/generated"
+```
+
+2. Plot the distribution of MutDafny's runtime at generating mutants. The [`mutation/statistics/mutants-gen.R`](mutation/statistics/mutants-gen.R) generates two PDF files in the provided directory:
+
+- `distribution-overall-runtime-mutants-gen.pdf`, overall runtime distribution
+- `distribution-runtime-mutants-gen.pdf`, runtime distribution per mutation operator
+
+```bash
+cd "$(pwd)/mutation/statistics"
+
+Rscript mutants-gen.R \
+  "$(pwd)/../data/generated/scan-data.csv" \
+  "$(pwd)/../data/generated/mut-data.csv" \
+  "$(pwd)/../data/generated"
+```
+
+3. Compute and print out, as a latex table, the number of generated mutants, the number of killed, survived, invalid, and timeout mutants per mutation operator; and plot the distribution of mutation scores. The [`mutation/statistics/mutants-status.R`](mutation/statistics/mutants-status.R) generates one latex file and two PDF files in the provided directory:
+
+- `distribution-status-mutants.tex`, latex table which shows the number of generated mutants, the number of killed, survived, invalid, and timeout mutants per mutation operator
+- `distribution-overall-mutation-score.pdf`, overall mutation score distribution
+- `distribution-mutation-score-per-mutation-operator.pdf`, mutation score distribution per mutation operator
+
+```bash
+cd "$(pwd)/mutation/statistics"
+
+Rscript mutants-status.R \
+  "$(pwd)/../data/generated/mut-data.csv" \
+  "$(pwd)/../data/generated"
+```
