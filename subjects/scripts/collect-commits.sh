@@ -30,7 +30,7 @@ if [ "$#" -ne "0" ] && [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ];
 fi
 
 # Print out script's arguments (which could help any debug session)
-echo "${BASH_SOURCE[0]} $@"; echo ""
+echo "[INFO] ${BASH_SOURCE[0]} $@"
 
 REPOSITORIES_FILE_PATH="$SCRIPT_DIR/../data/generated/repositories.csv"
 OUTPUT_FILE_PATH="$SCRIPT_DIR/../data/generated/commits.csv"
@@ -108,7 +108,7 @@ num_scraped_repos=0
 
 while read -r repository_url; do
   # Clean up working directory
-  rm -rf "$WORK_DIR"/* "$WORK_DIR"/.* > /dev/null 2>&1 || die "[ERROR] Failed to clean up $WORK_DIR!"
+  rm -rf "$WORK_DIR"/* "$WORK_DIR"/.* > /dev/null 2>&1
 
   echo "[DEBUG] Cloning $repository_url to $WORK_DIR" >&2
   git clone "$repository_url" "$WORK_DIR" || die "[ERROR] Failed to clone $repository_url to $WORK_DIR!"
