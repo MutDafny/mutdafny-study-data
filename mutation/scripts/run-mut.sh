@@ -43,7 +43,7 @@ USAGE="Usage: ${BASH_SOURCE[0]} \
   --output_file_path <full path to the file where runtime data will be written, e.g., $SCRIPT_DIR/../data/generated/mut/data/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/data.csv> \
   --output_dir_path <full path to the directory where mutants will be saved, e.g., $SCRIPT_DIR/../data/generated/mut/mutants/<mutation operator, e.g., BOR>/<Benchmark name, e.g., DafnyBench>/<Dafny program name, e.g., 630-dafny_tmp_tmpz2kokaiq_Solution>/> \
   [help]"
-if [ "$#" -ne "1" ] && [ "$#" -ne "10" ] && [ "$#" -ne "12" ]; then
+if [ "$#" -ne "1" ] && [ "$#" -ne "8" ] && [ "$#" -ne "10" ]; then
   die "$USAGE"
 fi
 
