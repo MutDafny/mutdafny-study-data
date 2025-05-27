@@ -10,10 +10,10 @@
 # ------------------------------------------------------------------------------
 
 source('../../utils/statistics/utils.R')
-library('dplyr')
-library('ggplot2')
-library('ggbeeswarm')
-library('scales')
+library('dplyr', lib.loc=local_library)
+library('ggplot2', lib.loc=local_library)
+library('ggbeeswarm', lib.loc=local_library)
+library('scales', lib.loc=local_library)
 
 # ------------------------------------------------------------------------- Args
 
