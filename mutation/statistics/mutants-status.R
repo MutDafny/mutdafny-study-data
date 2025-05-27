@@ -4,9 +4,9 @@
 # operator.
 #
 # Usage:
-#   Rscript mutants-status.R
-#     <mutation data file path, e.g., ../data/generated/mut-data.csv>
-#     <output dir path, e.g., ../data/generated>
+# Rscript mutants-status.R
+#   <mutation data file path, e.g., ../data/generated/mut-data.csv>
+#   <output dir path, e.g., ../data/generated>
 # ------------------------------------------------------------------------------
 
 source('../../utils/statistics/utils.R')

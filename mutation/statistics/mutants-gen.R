@@ -3,10 +3,10 @@
 # mutants.
 #
 # Usage:
-#   Rscript mutants-gen.R
-#     <scan data file path, e.g., ../data/generated/scan-data.csv>
-#     <mutation data file path, e.g., ../data/generated/mut-data.csv>
-#     <output dir path, e.g., ../data/generated>
+# Rscript mutants-gen.R
+#   <scan data file path, e.g., ../data/generated/scan-data.csv>
+#   <mutation data file path, e.g., ../data/generated/mut-data.csv>
+#   <output dir path, e.g., ../data/generated>
 # ------------------------------------------------------------------------------
 
 source('../../utils/statistics/utils.R')
