@@ -182,6 +182,15 @@ bash "$(pwd)/utils/scripts/run-jobs.sh" \
   --memory 2048
 ```
 
+3. Collect data in a single CSV file.
+
+```bash
+bash "$(pwd)/utils/scripts/collect-data.sh" \
+  --data_dir_path "$(pwd)/mutation/data/generated/scan/data/" \
+  --file_pattern "data.csv" \
+  --output_file_path "$(pwd)/mutation/data/generated/scan-data.csv"
+```
+
 ### 2. Mutation analysis
 
 <!-- TODO: add a brief description of (a) the actual generation of mutants and (b) the verification step -->
@@ -249,4 +258,13 @@ bash "$(pwd)/utils/scripts/run-jobs.sh" \
   --seconds_per_job 120 \
   --max_number_batches 128 \
   --memory 2048
+```
+
+3. Collect data in a single CSV file.
+
+```bash
+bash "$(pwd)/utils/scripts/collect-data.sh" \
+  --data_dir_path "$(pwd)/mutation/data/generated/mut/data/" \
+  --file_pattern "data.csv" \
+  --output_file_path "$(pwd)/mutation/data/generated/mut-data.csv"
 ```
