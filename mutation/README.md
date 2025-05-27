@@ -25,7 +25,6 @@ Usage example:
 bash "scripts/run-mut.sh" \
   --input_file_path "$(pwd)/../.third-parties/dafnybench/DafnyBench/dataset/ground_truth/630-dafny_tmp_tmpz2kokaiq_Solution.dfy" \
   --targets_file_path "$(pwd)/data/generated/scan/data/BOR/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/targets.csv" \
-  --helpers_file_path "$(pwd)/data/generated/scan/data/BOR/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/helpers.txt" \
   --output_file_path "$(pwd)/data/generated/mut/data/BOR/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/data.csv" \
   --output_directory_path "$(pwd)/data/generated/mut/mutants/BOR/DafnyBench/630-dafny_tmp_tmpz2kokaiq_Solution/"
 ```

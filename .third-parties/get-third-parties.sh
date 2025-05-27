@@ -35,6 +35,7 @@ if [ "$host_name" != "submit.grid.up.pt" ]; then
   Rscript --version > /dev/null 2>&1 || die "[ERROR] Could not find 'Rscript' to perform, e.g., statistical analysis. Please install 'Rscript' and re-run the script."
 fi
 
+shopt -s expand_aliases
 # Check whether 'unzip' is available, if not, try to use 'busybox unzip'
 unzip -v > /dev/null 2>&1 || alias unzip='busybox unzip'
 
@@ -159,7 +160,7 @@ cd "$MUTDAFNY_HOME_DIR"
     # Rename it and set its permissions
     mv "$Z3_BIN_FILE" "z3"
     chmod +x "z3"
-  pushd . > /dev/null 2>&1
+  popd > /dev/null 2>&1
 
   # Build [MutDafny](https://github.com/MutDafny/mutdafny)
   pushd . > /dev/null 2>&1

@@ -118,9 +118,6 @@ while read -r row; do # benchmark_name,program_name
     targets_file="$SCAN_DIR_PATH/data/$op/$ben/$pid/targets.csv"
     [ -s "$targets_file" ] || continue # Skip execution if there is nothing to mutate
 
-    helpers_file="$SCAN_DIR_PATH/data/$op/$ben/$pid/helpers.txt"
-    [ -f "$helpers_file" ] || continue
-
        job_data_dir_path="$data_dir_path/$op/$ben/$pid"
     job_mutants_dir_path="$mutants_dir_path/$op/$ben/$pid"
         job_log_dir_path="$logs_dir_path/$op/$ben/$pid"
@@ -138,7 +135,6 @@ while read -r row; do # benchmark_name,program_name
   --benchmark_name \"$ben\" \
   --input_file_path \"$program_under_test_file_path\" \
   --targets_file_path \"$targets_file\" \
-  --helpers_file_path \"$helpers_file\" \
   --output_file_path \"$job_data_dir_path/data.csv\" \
   --output_dir_path \"$job_mutants_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
   done
