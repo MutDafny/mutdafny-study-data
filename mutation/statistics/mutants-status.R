@@ -11,6 +11,12 @@
 
 source('../../utils/statistics/utils.R')
 library('dplyr', lib.loc=local_library)
+library('extrafont', lib.loc=local_library)
+library('farver', lib.loc=local_library)
+library('RColorBrewer', lib.loc=local_library)
+library('withr', lib.loc=local_library)
+library('utf8', lib.loc=local_library)
+library('labeling', lib.loc=local_library)
 library('ggplot2', lib.loc=local_library)
 library('ggbeeswarm', lib.loc=local_library)
 
