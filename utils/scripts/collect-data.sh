@@ -76,7 +76,7 @@ done
 # ------------------------------------------------------------------------- Main
 
 # Get header
-find "$DATA_DIR_PATH" -type f -name "$FILE_PATTERN" | head -n1 | xargs head -n1 > "$OUTPUT_FILE_PATH"
+find "$DATA_DIR_PATH" -type f -name "$FILE_PATTERN" -print0 | head -n1 -z | xargs -0 head -n1 > "$OUTPUT_FILE_PATH"
 # Get content
 find "$DATA_DIR_PATH" -type f -name "$FILE_PATTERN" -exec tail -n +2 {} \; | sort -t ',' -k1,1 -k2,2 -k3,3 >> "$OUTPUT_FILE_PATH"
 
