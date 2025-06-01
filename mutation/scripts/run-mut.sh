@@ -147,8 +147,8 @@ cd "$OUTPUT_DIR_PATH"
 
     if [ "$status" == "invalid" ]; then
       filename=$(basename "$INPUT_FILE_PATH" .dfy)
-      rm "${filename}_${pos}_${ope}_${arg}.dfy" 2>/dev/null
-      rm "${filename}_${pos}_${ope}.dfy" 2>/dev/null
+      rm -f "${filename}_${pos}_${ope}_${arg}.dfy"
+      rm -f "${filename}_${pos}_${ope}.dfy"
     fi
     echo "[DEBUG] Mutant $row $status"
 
