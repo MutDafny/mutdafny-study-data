@@ -107,7 +107,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-runtime-mutants-g
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=6)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=8, height=8)
 
 # Calculate mean, median, and max number of runtime
 mean_runtimes   <- mean(df$'runtime')
