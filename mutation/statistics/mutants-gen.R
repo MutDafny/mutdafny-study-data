@@ -89,8 +89,8 @@ p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), ax
 # Add text values
 p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
            label=paste0(#
-             'Median = ', sprintf('%.2f', round(mean_time, 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
@@ -141,8 +141,8 @@ p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), ax
 # Add text values
 p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
            label=paste0(#
-             'Median = ', sprintf('%.2f', round(mean_time, 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
@@ -208,8 +208,8 @@ p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), ax
 # Add text values
 p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
            label=paste0(#
-             'Median = ', sprintf('%.2f', round(mean_time, 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
@@ -266,8 +266,8 @@ p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), ax
 # Add text values
 p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
            label=paste0(#
-             'Median = ', sprintf('%.2f', round(mean_time, 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
