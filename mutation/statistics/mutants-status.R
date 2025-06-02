@@ -129,7 +129,7 @@ p <- p + labs(x='', y='% Mutation Score') +
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
-p <- p + annotate('text', x=Inf, y=30, hjust=1.1, vjust=1.5,
+p <- p + annotate('text', x=Inf, y=0, hjust=0, vjust=1.5,
            label=paste0(#
              'Median = ', sprintf('%.2f', round(median_score, 2)), '%', '\n',
              'Mean = ', sprintf('%.2f', round(mean_score, 2)), '%'),
