@@ -87,7 +87,7 @@ p <- p + labs(x='', y='Mutant generation runtime (seconds, log10 scale)')
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
-p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
+p <- p + annotate('text', x=Inf, y=Inf, hjust=1, vjust=1,
            label=paste0(#
              'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
@@ -139,13 +139,80 @@ p <- p + labs(x='', y='Mutant total runtime (seconds, log10 scale)')
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
-p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
+p <- p + annotate('text', x=Inf, y=Inf, hjust=1, vjust=1,
            label=paste0(#
              'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
+# Print plot
+print(p)
+
+# Close output file
+dev.off()
+# Embed fonts
+embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
+
+# -------- Combined
+
+OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-mutants-combined.pdf')
+
+# Remove any existing output file and create a new one
+unlink(OUTPUT_FILE_PATH)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=4)
+
+# Prepare the data for combined plot
+combined_df <- bind_rows(
+  runtimes_df %>% mutate(type = "Mutant generation"),
+  total_mut_times_df %>% mutate(type = "Mutant total")
+)
+
+# Calculate global min and max for consistent scaling
+global_min <- min(min(runtimes_df$time), min(total_mut_times_df$time))
+global_max <- max(max(runtimes_df$time), max(total_mut_times_df$time))
+
+# Create combined plot
+p <- ggplot(combined_df, aes(x = type, y = time, fill = type)) + 
+  geom_boxplot() +
+  coord_flip() +
+  scale_y_log10(
+    breaks = scales::log_breaks(base = 10, n = 12),
+    labels = scales::label_comma(),
+    limits = c(global_min, global_max)  # Ensure same scale for both
+  ) +
+  labs(
+    x = '', 
+    y = 'Runtime (seconds, log10 scale)',
+    fill = 'Runtime type'
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position = "bottom"
+  ) +
+  scale_fill_manual(values = c("Mutant generation" = "cornflowerblue", "Mutant total" = "goldenrod"))
+
+# Calculate statistics for annotation
+gen_stats <- runtimes_df$time
+total_stats <- total_mut_times_df$time
+
+# Add text annotations
+p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
+           label = paste0(
+             'Generation Time\n',
+             'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n',
+             '\n',
+             'Total Time\n',
+             'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(total_stats), 2))
+           ),
+           size = 3, color = 'black')
+
 # Print plot
 print(p)
 
@@ -206,7 +273,7 @@ p <- p + labs(x='', y='Program mutants generation runtime (seconds, log10 scale)
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
-p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
+p <- p + annotate('text', x=Inf, y=Inf, hjust=1, vjust=1,
            label=paste0(#
              'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
@@ -264,13 +331,80 @@ p <- p + labs(x='', y='Program total runtime (seconds, log10 scale)')
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
-p <- p + annotate('text', x=Inf, y=Inf, hjust=1.1, vjust=1.0,
+p <- p + annotate('text', x=Inf, y=Inf, hjust=1, vjust=1,
            label=paste0(#
              'Median = ', sprintf('%.2f', round(median_time, 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean_time, 2)), '\n',
              'Max = ', sprintf('%.2f', round(max_time, 2))
            ),
            size=4, color='black')
+# Print plot
+print(p)
+
+# Close output file
+dev.off()
+# Embed fonts
+embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
+
+# -------- Combined
+
+OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-programs-combined.pdf')
+
+# Remove any existing output file and create a new one
+unlink(OUTPUT_FILE_PATH)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=4)
+
+# Prepare the data for combined plot
+combined_df <- bind_rows(
+  total_gen_times_df %>% mutate(type = "Program mutant generation"),
+  total_times_df %>% mutate(type = "Program total")
+)
+
+# Calculate global min and max for consistent scaling
+global_min <- min(min(total_gen_times_df$total_runtime), min(total_times_df$total_runtime))
+global_max <- max(max(total_gen_times_df$total_runtime), max(total_times_df$total_runtime))
+
+# Create combined plot
+p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) + 
+  geom_boxplot() +
+  coord_flip() +
+  scale_y_log10(
+    breaks = scales::log_breaks(base = 10, n = 12),
+    labels = scales::label_comma(),
+    limits = c(global_min, global_max)  # Ensure same scale for both
+  ) +
+  labs(
+    x = '', 
+    y = 'Runtime (seconds, log10 scale)',
+    fill = 'Runtime type'
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position = "bottom"
+  ) +
+  scale_fill_manual(values = c("Program mutant generation" = "cornflowerblue", "Program total" = "goldenrod"))
+
+# Calculate statistics for annotation
+gen_stats <- total_gen_times_df$total_runtime
+total_stats <- total_times_df$total_runtime
+
+# Add text annotations
+p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
+           label = paste0(
+             'Generation Time\n',
+             'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n',
+             '\n',
+             'Total Time\n',
+             'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(total_stats), 2))
+           ),
+           size = 3, color = 'black')
+
 # Print plot
 print(p)
 
