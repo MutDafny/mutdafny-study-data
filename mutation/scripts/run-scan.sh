@@ -103,6 +103,11 @@ echo "[INFO] PID: $$"
 echo "[INFO] $(hostname)"
 echo "[INFO] Running MutDafny's scan command ($MUTATION_OPERATOR mutation operator) on $INPUT_FILE_PATH"
 
+MUTATION_OPERATOR_ARG="$MUTATION_OPERATOR"
+if [ "$MUTATION_OPERATOR" == "ALL" ]; then
+  MUTATION_OPERATOR_ARG="BOR BBR UOI UOD LVR EVR VER LSR LBI MCR SAR CIR CBR CBE DCR SDL VDL ODL THI THD AMR MMR FAR PRV SWS"
+fi
+
 # Create output directory, if it does not exist
 mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
 
@@ -118,7 +123,7 @@ cd "$OUTPUT_DIR_PATH"
   start=$(date +%s%3N)
   "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
     --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
-    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR" > "$tmp_log_file" 2>&1
+    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
   end=$(date +%s%3N)
   cat "$tmp_log_file"
 
