@@ -39,6 +39,11 @@ load_TABLE <- function(zip_path) {
   return(read.table(gzfile(zip_path), header=TRUE, stringsAsFactors=FALSE))
 }
 
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
 #
 # Replaces all NaNs in a dataframe with 0
 #
