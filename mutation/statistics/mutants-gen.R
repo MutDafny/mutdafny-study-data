@@ -190,29 +190,39 @@ plugin_times_df <- df %>%
     total_runtime = total_mut_time + plugin_time * 0.001
   )
 
+mutants_verif_times <- df %>%
+  dplyr::group_by(benchmark_name, program_name) %>%
+  dplyr::summarise(
+    total_verif_time = sum(mut_verification_time)
+  ) %>%
+  dplyr::mutate(
+    total_runtime = total_verif_time * 0.001
+  )
+
 # -------- Combined
 
 OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-programs-combined.pdf')
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=4)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=5)
 
 # Prepare the data for combined plot
 combined_df <- bind_rows(
   plugin_times_df %>% mutate(type = "Plugin"),
   total_gen_times_df %>% mutate(type = "Mutant generation"),
+  mutants_verif_times %>% mutate(type = "Mutation analysis"),
   total_times_df %>% mutate(type = "Total")
 ) %>%
 mutate(type = factor(
   type, 
-  levels = c("Plugin", "Mutant generation", "Total"),
+  levels = c("Plugin", "Mutant generation", "Mutation analysis", "Total"),
   ordered = TRUE
 ))
 
 # Calculate global min and max for consistent scaling
-global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$total_runtime), min(total_times_df$total_runtime))
-global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime), max(total_times_df$total_runtime))
+global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$total_runtime), min(mutants_verif_times$total_runtime), min(total_times_df$total_runtime))
+global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime), max(mutants_verif_times$total_runtime), max(total_times_df$total_runtime))
 
 # Create combined plot
 p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) + 
@@ -234,11 +244,12 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
     axis.ticks.y = element_blank(),
     legend.position = "bottom"
   ) +
-  scale_fill_manual(values = c("Plugin" = "cornflowerblue", "Mutant generation" = "sandybrown", "Total" = "cornflowerblue"))
+  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown", "Mutation analysis" = "cornflowerblue", "Total" = "cornflowerblue"))
 
 # Calculate statistics for annotation
 plugin_stats <- plugin_times_df$total_runtime
 gen_stats <- total_gen_times_df$total_runtime
+mut_verif_stats <- mutants_verif_times$total_runtime
 total_stats <- total_times_df$total_runtime
 
 # Add text annotations
