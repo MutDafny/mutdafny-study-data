@@ -153,6 +153,15 @@ This would generate three top-level directories in the provided output dir (`job
   * `logs/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|SAR|CIR|CBR|CBE|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS>/<Benchmark name>/<Dafny program name>/job.log` which keeps the stdout and stderr of the execution of the correspondent `job` script.
 - `data/<mutation operator, BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|SAR|CIR|CBR|CBE|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS>/<Benchmark name>/<Dafny program name>/`
 
+The previous command generates the targets for each operator individually. For data analysis purposes, we also need to collect data relative to the generation of mutation targets for every operator simultaneously.
+
+```bash
+bash "$(pwd)/mutation/scripts/gen-scan-jobs.sh" \
+  --input_file_path "$(pwd)/subjects/data/generated/subjects-whitelist.csv" \
+  --mutation_operators "ALL" \
+  --output_dir_path "$(pwd)/mutation/data/generated/scan"
+```
+
 2. Run jobs in parallel.
 
 ```bash
@@ -182,11 +191,11 @@ bash "$(pwd)/utils/scripts/run-jobs.sh" \
   --memory 2048
 ```
 
-3. Collect data in a single CSV file.
+3. Collect data in a single CSV file. This works either for a single execution, the `data_dir_path` being a directory with one `data/` directory, one `jobs` directory, and one `logs` directory, or, for multiple executions, the `data_dir_path` containing multiple `subdirectories` each corresponding to one execution (e.g., `exec1/`, `exec2`, `exec3`, etc.) and each containing one `data/` directory, one `jobs` directory, and one `logs` directory.
 
 ```bash
 bash "$(pwd)/utils/scripts/collect-data.sh" \
-  --data_dir_path "$(pwd)/mutation/data/generated/scan/data/" \
+  --data_dir_path "$(pwd)/mutation/data/generated/scan/" \
   --file_pattern "data.csv" \
   --output_file_path "$(pwd)/mutation/data/generated/scan-data.csv"
 ```
@@ -260,13 +269,30 @@ bash "$(pwd)/utils/scripts/run-jobs.sh" \
   --memory 2048
 ```
 
-3. Collect data in a single CSV file.
+3. Collect data in a single CSV file. This works either for a single execution, the `data_dir_path` being a directory with one `data/` directory, one `jobs` directory, and one `logs` directory, or, for multiple executions, the `data_dir_path` containing multiple `subdirectories` each corresponding to one execution (e.g., `exec1/`, `exec2`, `exec3`, etc.) and each containing one `data/` directory, one `jobs` directory, and one `logs` directory.
 
 ```bash
 bash "$(pwd)/utils/scripts/collect-data.sh" \
-  --data_dir_path "$(pwd)/mutation/data/generated/mut/data/" \
+  --data_dir_path "$(pwd)/mutation/data/generated/mut/" \
   --file_pattern "data.csv" \
   --output_file_path "$(pwd)/mutation/data/generated/mut-data.csv"
+```
+
+Running `collect-data.sh` for a `data_dir_path` containing multiple executions will create as many `scan-data.csv` or `mut-data.csv` files as there are execeutions. The data of the several executions should be merged into one single data file. This is done the following way:
+- for the values of `scan-data.csv`, the records with `scan_time` value in the 20% highest are excluded
+- for the values of `scan-data.csv`, the records with `scan_time` value in the 20% lowest are excluded
+- for the values of `mut-data.csv`, the records with `mut_time` value in the 20% highest are excluded
+- for the values of `mut-data.csv`, the records with `mut_time` value in the 20% lowest are excluded
+- for each runtime attribute, we keep the average of its value across the remaining records
+```bash
+cd "$(pwd)/utils/scripts"
+
+Rscript collect-data.R \
+  "$(pwd)/../../mutation/data/generated" \
+  "exec1-scan-data.csv,exec2-scan-data.csv,exec3-scan-data.csv" \
+  "exec1-mut-data.csv,exec2-mut-data.csv,exec3-mut-data.csv" \
+  "$(pwd)/../../mutation/data/generated/scan-data.csv" \
+  "$(pwd)/../../mutation/data/generated/mut-data.csv"
 ```
 
 ### 3. Data analysis
