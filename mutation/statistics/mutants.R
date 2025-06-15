@@ -34,7 +34,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-number-mutants-pe
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=8, height=8)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=10)
 
 # Count mutants per benchmark, program, and mutation_operator
 mutant_counts <- data %>%
