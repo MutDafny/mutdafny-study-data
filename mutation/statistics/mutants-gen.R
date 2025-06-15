@@ -38,12 +38,14 @@ mut_data <- mut_data[mut_data$'status' != 'invalid', ]
 
 # Keep some columns
 scan_data <- scan_data[ , (names(scan_data) %in% c('benchmark_name', 'program_name', 'mutation_operator', 'parsing_time', 'plugin_time', 'resolution_time', 'verification_time', 'scan_time'))]
-mut_data  <- mut_data[ , (names(mut_data) %in% c('benchmark_name', 'program_name', 'mutation_operator', 'status', 'verification_time', 'mut_time'))]
+mut_data  <- mut_data[ , (names(mut_data) %in% c('benchmark_name', 'program_name', 'mutation_operator', 'status', 'plugin_time', 'verification_time', 'mut_time'))]
 
 # Merge data by benchmark_name, program_name, mutation_operator
 df <- merge(scan_data, mut_data, by=c('benchmark_name', 'program_name', 'mutation_operator'))
 df <- df %>%
   rename(
+    scan_plugin_time = plugin_time.x,
+    mut_plugin_time = plugin_time.y,
     scan_verification_time = verification_time.x,
     mut_verification_time = verification_time.y
   )
@@ -52,6 +54,7 @@ df <- df %>%
 df$'runtime' <- df$'mut_time' - df$'mut_verification_time'
 # Convert milliseconds to seconds
 df$'runtime' <- df$'runtime' * 0.001
+df$'mut_plugin_time' <- df$'mut_plugin_time' * 0.001
 df$'mut_time' <- df$'mut_time' * 0.001
 
 # -------- Overall program mutation time (MutDafny)
@@ -65,7 +68,7 @@ pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2)
 # Compute average scan_time per program
 scan_times_df <- scan_data %>%
   dplyr::filter(mutation_operator == "ALL") %>%
-  dplyr::select(benchmark_name, program_name, scan_time)
+  dplyr::select(benchmark_name, program_name, plugin_time, scan_time)
 
 # Compute total runtime per program
 total_gen_times_df <- df %>%
@@ -173,7 +176,21 @@ dev.off()
 # Embed fonts
 embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
 
-# # -------- Combined
+# -------- Overall plugin time (no verification and no resolution)
+
+plugin_times_df <- df %>%
+  dplyr::group_by(benchmark_name, program_name) %>%
+  dplyr::summarise(
+    total_mut_time = sum(mut_plugin_time)
+  ) %>%
+  # Join with the scan_time data
+  dplyr::left_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
+  # Calculate total runtime
+  dplyr::mutate(
+    total_runtime = total_mut_time + plugin_time * 0.001
+  )
+
+# -------- Combined
 
 OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-programs-combined.pdf')
 
@@ -183,9 +200,15 @@ pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=4)
 
 # Prepare the data for combined plot
 combined_df <- bind_rows(
-  total_gen_times_df %>% mutate(type = "Program mutant generation"),
-  total_times_df %>% mutate(type = "Program total")
-)
+  plugin_times_df %>% mutate(type = "Plugin"),
+  total_gen_times_df %>% mutate(type = "Mutant generation"),
+  total_times_df %>% mutate(type = "Total")
+) %>%
+mutate(type = factor(
+  type, 
+  levels = c("Plugin", "Mutant generation", "Total"),
+  ordered = TRUE
+))
 
 # Calculate global min and max for consistent scaling
 global_min <- min(min(total_gen_times_df$total_runtime), min(total_times_df$total_runtime))
@@ -202,8 +225,8 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
   ) +
   labs(
     x = '', 
-    y = 'Runtime (seconds, log10 scale)',
-    fill = 'Runtime type'
+    y = 'Program runtime (seconds, log10 scale)',
+    fill = 'Type'
   ) +
   theme(
     axis.title.y = element_blank(),
@@ -211,15 +234,21 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
     axis.ticks.y = element_blank(),
     legend.position = "bottom"
   ) +
-  scale_fill_manual(values = c("Program mutant generation" = "cornflowerblue", "Program total" = "goldenrod"))
+  scale_fill_manual(values = c("Plugin" = "cornflowerblue", "Mutant generation" = "sandybrown", "Total" = "cornflowerblue"))
 
 # Calculate statistics for annotation
+plugin_stats <- plugin_times_df$total_runtime
 gen_stats <- total_gen_times_df$total_runtime
 total_stats <- total_times_df$total_runtime
 
 # Add text annotations
 p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
            label = paste0(
+              'Plugin Time\n',
+             'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(plugin_stats), 2)), '\n',
+             '\n',
              'Generation Time\n',
              'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
@@ -256,7 +285,7 @@ operator_times_df <- df %>%
   dplyr::group_by(benchmark_name, program_name, mutation_operator) %>%
   dplyr::summarise(
     total_mut_time = sum(runtime),
-    plugin_time = first(plugin_time)
+    plugin_time = first(scan_plugin_time)
   ) %>%
   # Join with scan_times
   dplyr::left_join(scan_time_components_df, by = c("benchmark_name", "program_name")) %>%
