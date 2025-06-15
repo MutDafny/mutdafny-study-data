@@ -57,7 +57,7 @@ df$'runtime' <- df$'runtime' * 0.001
 df$'mut_plugin_time' <- df$'mut_plugin_time' * 0.001
 df$'mut_time' <- df$'mut_time' * 0.001
 
-# -------- Overall program mutation time (MutDafny)
+# -------- Overall program mutation time
 
 OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-programs-gen.pdf')
 
@@ -65,10 +65,11 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-p
 unlink(OUTPUT_FILE_PATH)
 pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2)
 
-# Compute average scan_time per program
+# Compute average scan_time per program and total
 scan_times_df <- scan_data %>%
   dplyr::filter(mutation_operator == "ALL") %>%
   dplyr::select(benchmark_name, program_name, plugin_time, scan_time)
+avg_scan_time <- mean(scan_times_df$scan_time) * 0.001
 
 # Compute total runtime per program
 total_gen_times_df <- df %>%
@@ -94,13 +95,19 @@ max_time    <- max(total_gen_times_df$'total_runtime')
 p <- ggplot(total_gen_times_df, aes(y=total_runtime)) + geom_boxplot()
 # Horizontal box plot
 p <- p + coord_flip()
+# Add vertical line for mean scan_time
+p <- p + geom_hline(yintercept=avg_scan_time, linetype='dashed', color='brown')
+# Add text label to the line
+p <- p + annotate('text', x=0, y=avg_scan_time, vjust=-5, hjust=-0.1,
+           label=paste0('Scan time = ', sprintf('%.2f', round(avg_scan_time, 2))),
+           size=4, color='brown')
 # Scale y-axis
 p <- p + scale_y_log10(
   breaks=scales::log_breaks(base=10, n=12),
   labels=scales::label_comma()
 )
 # Set labs
-p <- p + labs(x='', y='Program mutants generation runtime (seconds, log10 scale)')
+p <- p + labs(x='', y='Runtime (seconds, log10 scale)')
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
@@ -157,7 +164,7 @@ p <- p + scale_y_log10(
   labels=scales::label_comma()
 )
 # Set labs
-p <- p + labs(x='', y='Program total runtime (seconds, log10 scale)')
+p <- p + labs(x='', y='Runtime (seconds, log10 scale)')
 # Remove axis
 p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
 # Add text values
@@ -205,7 +212,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-p
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=5)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=7, height=5)
 
 # Prepare the data for combined plot
 combined_df <- bind_rows(
@@ -235,7 +242,7 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
   ) +
   labs(
     x = '', 
-    y = 'Program runtime (seconds, log10 scale)',
+    y = 'Runtime (seconds, log10 scale)',
     fill = 'Type'
   ) +
   theme(
@@ -255,17 +262,22 @@ total_stats <- total_times_df$total_runtime
 # Add text annotations
 p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
            label = paste0(
-              'Plugin Time\n',
+              'Plugin time\n',
              'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
              'Max = ', sprintf('%.2f', round(max(plugin_stats), 2)), '\n',
              '\n',
-             'Generation Time\n',
+             'Generation time\n',
              'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
              'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n',
              '\n',
-             'Total Time\n',
+              'Mutation analysis time\n',
+             'Median = ', sprintf('%.2f', round(median(mut_verif_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(mut_verif_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(mut_verif_stats), 2)), '\n',
+             '\n',
+             'Total time\n',
              'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
              'Max = ', sprintf('%.2f', round(max(total_stats), 2))
