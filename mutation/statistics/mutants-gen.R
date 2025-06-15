@@ -211,8 +211,8 @@ mutate(type = factor(
 ))
 
 # Calculate global min and max for consistent scaling
-global_min <- min(min(total_gen_times_df$total_runtime), min(total_times_df$total_runtime))
-global_max <- max(max(total_gen_times_df$total_runtime), max(total_times_df$total_runtime))
+global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$total_runtime), min(total_times_df$total_runtime))
+global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime), max(total_times_df$total_runtime))
 
 # Create combined plot
 p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) + 
