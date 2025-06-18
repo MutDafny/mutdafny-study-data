@@ -95,12 +95,6 @@ max_time    <- max(total_gen_times_df$'total_runtime')
 p <- ggplot(total_gen_times_df, aes(y=total_runtime)) + geom_boxplot()
 # Horizontal box plot
 p <- p + coord_flip()
-# Add vertical line for mean scan_time
-p <- p + geom_hline(yintercept=avg_scan_time, linetype='dashed', color='brown')
-# Add text label to the line
-p <- p + annotate('text', x=0, y=avg_scan_time, vjust=-5, hjust=-0.1,
-           label=paste0('Scan time = ', sprintf('%.2f', round(avg_scan_time, 2))),
-           size=4, color='brown')
 # Scale y-axis
 p <- p + scale_y_log10(
   breaks=scales::log_breaks(base=10, n=12),
@@ -262,7 +256,7 @@ total_stats <- total_times_df$total_runtime
 # Add text annotations
 p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
            label = paste0(
-              'Plugin time\n',
+             'Plugin time\n',
              'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
              'Max = ', sprintf('%.2f', round(max(plugin_stats), 2)), '\n',
@@ -283,6 +277,81 @@ p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
              'Max = ', sprintf('%.2f', round(max(total_stats), 2))
            ),
            size = 3, color = 'black')
+
+# Print plot
+print(p)
+
+# Close output file
+dev.off()
+# Embed fonts
+embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
+
+# -------- Combined with scan mark
+
+OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-programs-scan-mark.pdf')
+
+# Remove any existing output file and create a new one
+unlink(OUTPUT_FILE_PATH)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=4)
+
+# Prepare the data for combined plot
+combined_df <- bind_rows(
+  plugin_times_df %>% mutate(type = "Plugin"),
+  total_gen_times_df %>% mutate(type = "Mutant generation"),
+) %>%
+mutate(type = factor(
+  type, 
+  levels = c("Plugin", "Mutant generation"),
+  ordered = TRUE
+))
+
+# Calculate global min and max for consistent scaling
+global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$total_runtime))
+global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime))
+
+# Create combined plot
+p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) + 
+  geom_boxplot() +
+  coord_flip() +
+  scale_y_log10(
+    breaks = scales::log_breaks(base = 10, n = 12),
+    labels = scales::label_comma(),
+    limits = c(global_min, global_max)  # Ensure same scale for both
+  ) +
+  labs(
+    x = '', 
+    y = 'Runtime (seconds, log10 scale)',
+    fill = 'Type'
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position = "bottom"
+  ) +
+  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown"))
+
+# Add text annotations
+p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
+           label = paste0(
+             'Plugin time\n',
+             'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(plugin_stats), 2)), '\n',
+             '\n',
+             'Generation time\n',
+             'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n'
+           ),
+           size = 3, color = 'black')
+
+# Add vertical line for mean scan_time
+p <- p + geom_hline(yintercept=avg_scan_time, linetype='dashed', color='brown')
+# Add text label to the line
+p <- p + annotate('text', x=0, y=avg_scan_time, vjust=-2.5, hjust=-0.05,
+           label=paste0('Mean scan time = ', sprintf('%.2f', round(avg_scan_time, 2))),
+           size=4, color='brown')
 
 # Print plot
 print(p)
