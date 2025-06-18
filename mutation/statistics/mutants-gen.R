@@ -70,6 +70,7 @@ scan_times_df <- scan_data %>%
   dplyr::filter(mutation_operator == "ALL") %>%
   dplyr::select(benchmark_name, program_name, plugin_time, scan_time)
 avg_scan_time <- mean(scan_times_df$scan_time) * 0.001
+med_scan_time <- median(scan_times_df$scan_time) * 0.001
 
 # Compute total runtime per program
 total_gen_times_df <- df %>%
@@ -349,9 +350,15 @@ p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
 # Add vertical line for mean scan_time
 p <- p + geom_hline(yintercept=avg_scan_time, linetype='dashed', color='brown')
 # Add text label to the line
-p <- p + annotate('text', x=0, y=avg_scan_time, vjust=-2.5, hjust=-0.05,
+p <- p + annotate('text', x=0, y=avg_scan_time, vjust=-3.5, hjust=-0.05,
            label=paste0('Mean scan time = ', sprintf('%.2f', round(avg_scan_time, 2))),
            size=4, color='brown')
+# Add vertical line for media scan_time
+p <- p + geom_hline(yintercept=med_scan_time, linetype='dashed', color='blue')
+# Add text label to the line
+p <- p + annotate('text', x=0, y=med_scan_time, vjust=-1.5, hjust=-0.12,
+           label=paste0('Median scan time = ', sprintf('%.2f', round(med_scan_time, 2))),
+           size=4, color='blue')
 
 # Print plot
 print(p)
