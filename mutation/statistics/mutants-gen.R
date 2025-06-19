@@ -11,12 +11,6 @@
 
 source('../../utils/statistics/utils.R')
 library('dplyr', lib.loc=local_library)
-library('extrafont', lib.loc=local_library)
-library('farver', lib.loc=local_library)
-library('RColorBrewer', lib.loc=local_library)
-library('withr', lib.loc=local_library)
-library('utf8', lib.loc=local_library)
-library('labeling', lib.loc=local_library)
 library('ggplot2', lib.loc=local_library)
 library('ggbeeswarm', lib.loc=local_library)
 library('scales', lib.loc=local_library)
@@ -321,13 +315,15 @@ operator_times_df <- df %>%
   dplyr::group_by(benchmark_name, program_name, mutation_operator) %>%
   dplyr::summarise(
     total_mut_time = sum(runtime),
-    plugin_time = first(scan_plugin_time)
+    plugin_time = first(scan_plugin_time),
+    num_mutants = n()
   ) %>%
   # Join with scan_times
   dplyr::left_join(scan_time_components_df, by = c("benchmark_name", "program_name")) %>%
   # Calculate total runtime
   dplyr::mutate(
-    total_runtime = total_mut_time + (parsing_time + plugin_time + resolution_time + verification_time) * 0.001
+    total_runtime = total_mut_time + (parsing_time + plugin_time + resolution_time + verification_time) * 0.001,
+    avg_runtime = total_runtime / num_mutants
   )
 
 print(summary(operator_times_df$'total_runtime'))
@@ -366,7 +362,57 @@ p <- p + scale_y_log10(
   labels=scales::label_comma()
 )
 # Set labs
-p <- p + labs(x='Mutation Operator', y='Mutant generation runtime (seconds, log10 scale)')
+p <- p + labs(x='Mutation Operator', y='Total mutant generation runtime (seconds, log10 scale)')
+# Print plot
+print(p)
+
+# Close output file
+dev.off()
+# Embed fonts
+embed_fonts_in_a_pdf(OUTPUT_FILE_PATH)
+
+# -------- Average Mutation time per mutation operator
+
+OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-runtime-operators-gen-avg.pdf')
+
+# Remove any existing output file and create a new one
+unlink(OUTPUT_FILE_PATH)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=10)
+
+# Calculate mean, median, and max number of runtime
+mean_runtimes   <- mean(operator_times_df$'avg_runtime')
+median_runtimes <- median(operator_times_df$'avg_runtime')
+max_runtimes    <- max(operator_times_df$'avg_runtime')
+
+# Distribution of runtime per mutation operator
+p <- ggplot(operator_times_df, aes(x=mutation_operator, y=avg_runtime)) + geom_boxplot() #+ facet_wrap(~ benchmark_name, scales='free_y')
+# Spreads points nicely without as much overlap
+p <- p + geom_quasirandom(alpha=0.2, size=0.7)
+# Add horizontal line for mean runtime
+p <- p + geom_hline(yintercept=mean_runtimes, linetype='dashed', color='brown')
+# Add text label to the line, anchored at first bin (leftmost)
+p <- p + annotate('text', x=0, y=mean_runtimes, vjust=-0.5, hjust=0,
+           label=paste0('Mean = ', sprintf('%.2f', round(mean_runtimes, 2))),
+           size=4, color='brown')
+# Add horizontal line for median runtime
+p <- p + geom_hline(yintercept=median_runtimes, linetype='dashed', color='blue')
+# Add text label to the line, anchored at first bin (leftmost)
+p <- p + annotate('text', x=0, y=median_runtimes, vjust=-0.5, hjust=0,
+           label=paste0('Median = ', sprintf('%.2f', round(median_runtimes, 2))),
+           size=4, color='blue')
+# Add horizontal line for max runtime
+p <- p + geom_hline(yintercept=max_runtimes, linetype='dashed', color='red')
+# Add text label to the line, anchored at first bin (leftmost)
+p <- p + annotate('text', x=0, y=max_runtimes, vjust=-0.5, hjust=0,
+           label=paste0('Max = ', sprintf('%.2f', round(max_runtimes, 2))),
+           size=4, color='red')
+# Scale y-axis
+p <- p + scale_y_log10(
+  breaks=scales::log_breaks(base=10, n=15),
+  labels=scales::label_comma()
+)
+# Set labs
+p <- p + labs(x='Mutation Operator', y='Average mutant generation runtime (seconds, log10 scale)')
 # Print plot
 print(p)
 
