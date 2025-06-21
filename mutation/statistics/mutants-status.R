@@ -104,10 +104,11 @@ pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2)
 
 # Compute kill ratio per program
 kill_ratios <- df %>%
+  dplyr::filter(status != "invalid") %>%
   dplyr::group_by(benchmark_name, program_name) %>%
   dplyr::summarise(
     total = n(),
-    killed = sum(status == 'killed'),
+    killed = sum(status %in% c('killed', 'timeout')),
     score = killed / total * 100.0
   )
 
@@ -155,7 +156,7 @@ kill_ratios <- df %>%
   dplyr::group_by(benchmark_name, program_name, mutation_operator) %>%
   dplyr::summarise(
     total = n(),
-    killed = sum(status == 'killed'),
+    killed = sum(status %in% c('killed', 'timeout')),
     score = killed / total * 100.0
   )
 
