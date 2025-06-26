@@ -258,7 +258,7 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
     axis.ticks.y = element_blank(),
     legend.position = "bottom"
   ) +
-  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown", "Mutation analysis" = "cornflowerblue", "Total" = "cornflowerblue"))
+  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown", "Mutation analysis" = "mediumseagreen", "Total" = "cornflowerblue"))
 
 # Calculate statistics for annotation
 plugin_stats <- plugin_times_df$total_runtime
