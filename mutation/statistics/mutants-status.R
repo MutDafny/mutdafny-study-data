@@ -149,7 +149,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-mutation-score-pe
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=10)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=11, height=10)
 
 # Compute kill ratio per program and operator
 kill_ratios <- df %>%

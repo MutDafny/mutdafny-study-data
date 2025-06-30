@@ -305,7 +305,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-runtime-operators
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=10)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=11, height=10)
 
 scan_time_components_df <- scan_data %>%
   dplyr::filter(mutation_operator == "ALL") %>%
@@ -377,7 +377,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-runtime-operators
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=10)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=11, height=10)
 
 # Calculate mean, median, and max number of runtime
 mean_runtimes   <- mean(operator_times_df$'avg_runtime')
