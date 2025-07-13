@@ -30,9 +30,13 @@ DOTNET_HOME_DIR="$THIRD_PARTIES_DIR/dotnet"
 [ -d "$DOTNET_HOME_DIR" ] || die "[ERROR] $DOTNET_HOME_DIR does not exist!"
 "$DOTNET_HOME_DIR/dotnet" --version > /dev/null 2>&1 || die "[ERROR] 'dotnet' is not available!"
 
-# Check whether the dafnybench's directory is available
+# Check whether the dafnybench's, aws's and consensys's directories are available
 DAFNYBENCH_HOME_DIR="$THIRD_PARTIES_DIR/dafnybench"
 [ -d "$DAFNYBENCH_HOME_DIR" ] || die "[ERROR] $DAFNYBENCH_HOME_DIR does not exist!"
+AWS_HOME_DIR="$THIRD_PARTIES_DIR/aws"
+[ -d "$AWS_HOME_DIR" ] || die "[ERROR] $AWS_HOME_DIR does not exist!"
+CONSENSYS_HOME_DIR="$THIRD_PARTIES_DIR/consensys"
+[ -d "$CONSENSYS_HOME_DIR" ] || die "[ERROR] $CONSENSYS_HOME_DIR does not exist!"
 
 # ------------------------------------------------------------------------- Args
 
@@ -95,6 +99,10 @@ while read -r row; do # benchmark_name,program_name
 
   if [ "$ben" == "DafnyBench" ]; then
     program_under_test_file_path="$DAFNYBENCH_HOME_DIR/DafnyBench/dataset/ground_truth/$pid.dfy"
+  elif [ "$ben" == "AWS" ]; then
+    program_under_test_file_path="$AWS_HOME_DIR/$pid.dfy"
+  elif [ "$ben" == "Consensys" ]; then
+    program_under_test_file_path="$CONSENSYS_HOME_DIR/$pid.dfy"
   else
     die "[ERROR] $ben not supported!"
   fi

@@ -86,12 +86,20 @@ echo "[INFO] Running Dafny's verify command on $INPUT_FILE_PATH"
 # Temporary log file
 tmp_log_file="/tmp/is-verifiable-$$.log"
 rm -f "$tmp_log_file"
+start=0
+end=0
 
-start=$(date +%s%3N)
-"$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
-  --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" > "$tmp_log_file" 2>&1
-end=$(date +%s%3N)
-cat "$tmp_log_file"
+if [ "$BENCHMARK_NAME" == "AWS" ]; then
+  start=$(date +%s%3N)
+  "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+    --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" --function-syntax:3 > "$tmp_log_file" 2>&1
+  end=$(date +%s%3N)
+else
+  start=$(date +%s%3N)
+  "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+    --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" > "$tmp_log_file" 2>&1
+  end=$(date +%s%3N)
+fi
 
 if grep -Eq "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors$" "$tmp_log_file"; then
   echo "[DEBUG] $INPUT_FILE_PATH is verifiable"
@@ -105,7 +113,13 @@ fi
 mkdir -p $(dirname "$OUTPUT_FILE_PATH")
 echo "benchmark_name,program_name,is_verifiable,runtime" > "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to create $OUTPUT_FILE_PATH!"
 # Populate it
-echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
+if [ "$BENCHMARK_NAME" == "AWS" ]; then
+  echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/aws/||"),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
+elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
+  echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/consensys/||"),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
+else
+  echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$is_verifiable,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH"
+fi
 
 # Clean up
 rm -f "$tmp_log_file"

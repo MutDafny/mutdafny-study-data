@@ -110,66 +110,42 @@ find "$DAFNYBENCH_HOME_DIR/DafnyBench/dataset/ground_truth" -mindepth 1 -maxdept
 #
 
 echo ""
-echo "Setting up MutDafny..."
+echo "Setting up AWS and Consensys"
 
-MUTDAFNY_HOME_DIR="$SCRIPT_DIR/mutdafny"
+AWS_HOME_DIR="$SCRIPT_DIR/aws"
+CONSENSYS_HOME_DIR="$SCRIPT_DIR/consensys"
 
-# Remove any previous directory
-rm -rf "$MUTDAFNY_HOME_DIR"
+# Remove any previous directories
+rm -rf "$AWS_HOME_DIR"
+rm -rf "$CONSENSYS_HOME_DIR"
 
-git clone --recursive https://github.com/MutDafny/mutdafny.git "$MUTDAFNY_HOME_DIR"
-if [ "$?" -ne "0" ] || [ ! -d "$MUTDAFNY_HOME_DIR" ]; then
-  die "[ERROR] Failed to clone MutDafny's repository!"
+git clone --recursive https://github.com/aws/aws-encryption-sdk.git "$AWS_HOME_DIR"
+if [ "$?" -ne "0" ] || [ ! -d "$AWS_HOME_DIR" ]; then
+  die "[ERROR] Failed to clone AWS's repository!"
 fi
 
 pushd . > /dev/null 2>&1
-cd "$MUTDAFNY_HOME_DIR"
-  # Switch to latest commit/version
-  # TODO git checkout ????? || die "[ERROR] Failed to checkout ?????!"
+cd "$AWS_HOME_DIR"
+  # Switch to 1be4d62a8cd926cde7b2c0aa5b16d88962290815
+  git checkout 1be4d62a8cd926cde7b2c0aa5b16d88962290815 || die "[ERROR] Failed to checkout 1be4d62a8cd926cde7b2c0aa5b16d88962290815!"
+popd > /dev/null 2>&1
 
-  # Build [Dafny](https://dafny.org)'s submodule
-  pushd . > /dev/null 2>&1
-  cd dafny   || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny directory!"
-    # Build it
-    make exe || die "[ERROR] Failed to build Dafny's!"
-    # Sanity check
-    dotnet "Binaries/Dafny.dll" --version || die "[ERROR] Dafny is not correctly installed!"
-  popd > /dev/null 2>&1
+# Collect set of programs
+find "$AWS_HOME_DIR"/AwsEncryptionSDK/dafny/AwsEncryptionSdk -type f -name "*.dfy" | \
+  sort --ignore-case --human-numeric-sort | \
+  sed "s|.dfy$||g"   | \
+  sed "s|^$AWS_HOME_DIR|AWS,|g" >> "$SUBJECTS_FILE"
 
-  # Get [Z3](https://github.com/Z3Prover/z3)
-  pushd . > /dev/null 2>&1
-  cd dafny/Binaries || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny/Binaries directory!"
-    Z3_VERSION="4.12.6"
-    Z3_BIN_FILE="z3-$Z3_VERSION"
-    Z3_ZIP_FILE="z3-$Z3_VERSION-x64-ubuntu-22.04-bin.zip"
-    Z3_URL="https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2024-04-10/$Z3_ZIP_FILE"
 
-    # Remove any previous file or directory
-    rm -f "$Z3_BIN_FILE" "$Z3_ZIP_FILE"
+git clone --recursive https://github.com/Consensys/evm-dafny.git "$CONSENSYS_HOME_DIR"
+if [ "$?" -ne "0" ] || [ ! -d "$CONSENSYS_HOME_DIR" ]; then
+  die "[ERROR] Failed to clone Consensys's repository!"
+fi
 
-    # Get distribution file
-    wget -np -nv "$Z3_URL" -O "$Z3_ZIP_FILE"
-    if [ "$?" -ne "0" ] || [ ! -s "$Z3_ZIP_FILE" ]; then
-      die "[ERROR] Failed to download $Z3_URL!"
-    fi
-
-    # Extract it
-    unzip "$Z3_ZIP_FILE" || die "[ERROR] Failed to extract $Z3_ZIP_FILE!"
-    [ -s "$Z3_BIN_FILE" ] || die "[ERROR] $Z3_BIN_FILE does not exist or it is empty!"
-
-    # Rename it and set its permissions
-    mv "$Z3_BIN_FILE" "z3"
-    chmod +x "z3"
-  popd > /dev/null 2>&1
-
-  # Build [MutDafny](https://github.com/MutDafny/mutdafny)
-  pushd . > /dev/null 2>&1
-  cd mutdafny
-    # Build it
-    dotnet build || die "[ERROR] Failed to build MutDafny!"
-    # Sanity check
-    [ -s "bin/Debug/net8.0/mutdafny.dll" ] || die "[ERROR] MutDafny is not correctly installed!"
-  popd > /dev/null 2>&1
+pushd . > /dev/null 2>&1
+cd "$CONSENSYS_HOME_DIR"
+  # Switch to e2e52e86d6623d48d0849f5ce1664f88c8f0e547
+  git checkout e2e52e86d6623d48d0849f5ce1664f88c8f0e547 || die "[ERROR] Failed to checkout e2e52e86d6623d48d0849f5ce1664f88c8f0e547!"
 popd > /dev/null 2>&1
 
 #
