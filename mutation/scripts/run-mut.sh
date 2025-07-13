@@ -123,11 +123,21 @@ cd "$OUTPUT_DIR_PATH"
     echo ""
     echo "[DEBUG] Mutant $row"
 
-    start=$(date +%s%3N)
-    "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+    start=0
+    end=0
+    if [ "$BENCHMARK_NAME" == "AWS" ]; then
+      start=$(date +%s%3N)
+      "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+        --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" --function-syntax:3 \
+        --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" 2>&1 | tee "$tmp_log_file"
+      end=$(date +%s%3N)
+    else
+      start=$(date +%s%3N)
+      "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
         --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
         --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","mut $pos $ope $arg" 2>&1 | tee "$tmp_log_file"
-    end=$(date +%s%3N)
+      end=$(date +%s%3N)
+    fi
 
     if grep -Eq   "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors$" "$tmp_log_file"; then
       status="survived"
@@ -165,7 +175,13 @@ cd "$OUTPUT_DIR_PATH"
     fi
 
     # Save runtime data
-    echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    if [ "$BENCHMARK_NAME" == "AWS" ]; then
+      echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/aws/||"),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
+      echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/consensys/||"),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    else
+      echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$pos,$ope,$arg,$status,$elapsed_times,$(echo $end - $start | bc)" >> "$OUTPUT_FILE_PATH" || die "[ERROR] Failed to populate $OUTPUT_FILE_PATH!"
+    fi
   done < <(cat "$TARGETS_FILE_PATH")
 
 popd > /dev/null 2>&1

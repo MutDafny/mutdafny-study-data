@@ -120,11 +120,22 @@ rm -f "$tmp_log_file"
 
 pushd . > /dev/null 2>&1
 cd "$OUTPUT_DIR_PATH"
-  start=$(date +%s%3N)
-  "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
-    --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
-    --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
-  end=$(date +%s%3N)
+
+  start=0
+  end=0
+  if [ "$BENCHMARK_NAME" == "AWS" ]; then
+    start=$(date +%s%3N)
+    "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+      --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" --function-syntax:3 \
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
+    end=$(date +%s%3N)
+  else
+    start=$(date +%s%3N)
+    "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+      --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
+    end=$(date +%s%3N)
+  fi
   cat "$tmp_log_file"
 
   if ! grep -Eq "^Dafny program verifier finished with [1-9][0-9]* verified, 0 errors" "$tmp_log_file"; then
@@ -148,7 +159,13 @@ cd "$OUTPUT_DIR_PATH"
 
   data_file="data.csv"
   echo "benchmark_name,program_name,mutation_operator,parsing_time,plugin_time,resolution_time,verification_time,number_of_targets,scan_time" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH/$data_file!"
-  echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIR_PATH/$data_file!"
+  if [ "$BENCHMARK_NAME" == "AWS" ]; then
+    echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/aws/||"),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIR_PATH/$data_file!"
+  elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
+    echo "$BENCHMARK_NAME,$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/consensys/||"),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIR_PATH/$data_file!"
+  else
+    echo "$BENCHMARK_NAME,$(basename "$INPUT_FILE_PATH" .dfy),$MUTATION_OPERATOR,$(tail -n1 $elapsed_time_file),$number_of_targets,$(echo $end - $start | bc)" >> "$data_file" || die "[ERROR] Failed to populate $OUTPUT_DIR_PATH/$data_file!"
+  fi
   [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIR_PATH/$data_file does not exist or it is empty!"
 
   rm -f "$elapsed_time_file"
