@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 #
 # ------------------------------------------------------------------------------
-# This script creates as many jobs (where each job executes the [`run-scan.sh`](run-scan.sh)
-# script on a Dafny program and a mutation operator) as the number of Dafny programs
-# defined in [`$SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv`]($SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv)
-# times the number of mutation operators.
+# This script creates as many jobs (where each job executes the [`run-analyze.sh`](run-analyze.sh)
+# script on a Dafny program) as the number of Dafny programs defined in 
+# [`$SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv`]($SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv).
 #
 # Usage:
-# gen-scan-jobs.sh
+# gen-analyze-jobs.sh
 #   [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>]
-#    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV>
-#   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>]
+#   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/analyze (by default)>]
 #   [help]
 # ------------------------------------------------------------------------------
 
@@ -39,10 +37,9 @@ CONSENSYS_HOME_DIR="$THIRD_PARTIES_DIR/consensys"
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>] \
-   --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV> \
-  [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan (by default)>] \
+  [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/analyze (by default)>] \
   [help]"
-if [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ] && [ "$#" -ne "6" ]; then
+if [ "$#" -ne "0" ] && [ "$#" -ne "1" ] && [ "$#" -ne "2" ] && [ "$#" -ne "4" ]; then
   die "$USAGE"
 fi
 
@@ -50,17 +47,13 @@ fi
 echo "[INFO] ${BASH_SOURCE[0]} $@"
 
 INPUT_FILE_PATH="$SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv"
-MUTATION_OPERATORS=""
-OUTPUT_DIR_PATH="$SCRIPT_DIR/../data/generated/scan"
+OUTPUT_DIR_PATH="$SCRIPT_DIR/../data/generated/analyze"
 
 while [[ "$1" = --* ]]; do
   OPTION=$1; shift
   case $OPTION in
     (--input_file_path)
       INPUT_FILE_PATH=$1;
-      shift;;
-    (--mutation_operators)
-      MUTATION_OPERATORS=$1;
       shift;;
     (--output_dir_path)
       OUTPUT_DIR_PATH=$1;
@@ -75,13 +68,12 @@ done
 
 # Check whether all arguments have been initialized
 [ "$INPUT_FILE_PATH" != "" ]    || die "[ERROR] Missing --input_file_path argument!"
-[ "$MUTATION_OPERATORS" != "" ] || die "[ERROR] Missing --mutation_operators argument!"
 [ "$OUTPUT_DIR_PATH" != "" ]    || die "[ERROR] Missing --output_dir_path argument!"
 
 # Check whether input files exist and it is not empty
 [ -s "$INPUT_FILE_PATH" ] || die "[ERROR] $INPUT_FILE_PATH does not exist or it is empty!"
 
-# ------------------------------------------------------------------------- Main
+# ------------------------------------------------------------------------- Args
 
 # Create output directory, if it does not exist
 mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
@@ -90,7 +82,7 @@ mkdir -p "$OUTPUT_DIR_PATH" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH!"
               data_dir_path="$OUTPUT_DIR_PATH/data"
               logs_dir_path="$OUTPUT_DIR_PATH/logs"
               jobs_dir_path="$OUTPUT_DIR_PATH/jobs"
-master_job_script_file_path="$SCRIPT_DIR/run-scan.sh"
+master_job_script_file_path="$SCRIPT_DIR/run-analyze.sh"
 [ -s "$master_job_script_file_path" ] || die "[ERROR] $master_job_script_file_path does not exist or it is empty!"
 mkdir -p "$data_dir_path" "$logs_dir_path" "$jobs_dir_path"
 
@@ -111,27 +103,23 @@ while read -r row; do # benchmark_name,program_name
   fi
   [ -s "$program_under_test_file_path" ] || die "[ERROR] $program_under_test_file_path does not exist or it is empty!"
 
-  for op in $(echo "$MUTATION_OPERATORS" | tr ',' '\n'); do
-    echo "[DEBUG] $ben :: $pid :: $op"
+     job_data_dir_path="$data_dir_path/$ben/$pid"
+      job_log_dir_path="$logs_dir_path/$ben/$pid"
+     job_log_file_path="$job_log_dir_path/job.log"
+   job_script_dir_path="$jobs_dir_path/$ben/$pid"
+  job_script_file_path="$job_script_dir_path/job.sh"
 
-       job_data_dir_path="$data_dir_path/$op/$ben/$pid"
-        job_log_dir_path="$logs_dir_path/$op/$ben/$pid"
-       job_log_file_path="$job_log_dir_path/job.log"
-     job_script_dir_path="$jobs_dir_path/$op/$ben/$pid"
-    job_script_file_path="$job_script_dir_path/job.sh"
+  mkdir -p "$job_data_dir_path" "$job_log_dir_path" "$job_script_dir_path"
+  touch "$job_log_file_path" "$job_script_file_path"
 
-    mkdir -p "$job_data_dir_path" "$job_log_dir_path" "$job_script_dir_path"
-    touch "$job_log_file_path" "$job_script_file_path"
+  echo "#!/usr/bin/env bash" > "$job_script_file_path"
+  echo "#"                  >> "$job_script_file_path"
+  echo "# timefactor:1"     >> "$job_script_file_path"
+  echo "bash $master_job_script_file_path \
+    --benchmark_name \"$ben\" \
+    --input_file_path \"$program_under_test_file_path\" \
+    --output_dir_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
 
-    echo "#!/usr/bin/env bash" > "$job_script_file_path"
-    echo "#"                  >> "$job_script_file_path"
-    echo "# timefactor:1"     >> "$job_script_file_path"
-    echo "bash $master_job_script_file_path \
-      --benchmark_name \"$ben\" \
-      --input_file_path \"$program_under_test_file_path\" \
-      --mutation_operator \"$op\" \
-      --output_dir_path \"$job_data_dir_path\" > \"$job_log_file_path\" 2>&1" >> "$job_script_file_path"
-  done
 done < <(tail -n +2 "$INPUT_FILE_PATH")
 
 echo "Jobs have been created. Please run the $SCRIPT_DIR/../../utils/scripts/run-jobs.sh script on the generated jobs, e.g., $SCRIPT_DIR/../../utils/scripts/run-jobs.sh --jobs_dir_path $OUTPUT_DIR_PATH/jobs."
