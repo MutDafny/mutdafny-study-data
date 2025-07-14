@@ -125,9 +125,17 @@ cd "$OUTPUT_DIR_PATH"
   end=0
   if [ "$BENCHMARK_NAME" == "AWS" ]; then
     start=$(date +%s%3N)
+    uri=$(echo $INPUT_FILE_PATH | sed "s|.*/aws/||")
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
       --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" --function-syntax:3 \
-      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $uri $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
+    end=$(date +%s%3N)
+  elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
+    start=$(date +%s%3N)
+    uri=$(echo $INPUT_FILE_PATH | sed "s|.*/consensys/||")
+    "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+      --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","scan $uri $MUTATION_OPERATOR_ARG" > "$tmp_log_file" 2>&1
     end=$(date +%s%3N)
   else
     start=$(date +%s%3N)

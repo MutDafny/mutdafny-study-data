@@ -114,9 +114,17 @@ cd "$OUTPUT_DIR_PATH"
   end=0
   if [ "$BENCHMARK_NAME" == "AWS" ]; then
     start=$(date +%s%3N)
+    uri=$(echo $INPUT_FILE_PATH | sed "s|.*/aws/||")
     "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
       --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" --function-syntax:3 \
-      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll,analyze" > "$tmp_log_file" 2>&1
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","analyze $uri" > "$tmp_log_file" 2>&1
+    end=$(date +%s%3N)
+  elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
+    start=$(date +%s%3N)
+    uri=$(echo $INPUT_FILE_PATH | sed "s|.*/consensys/||")
+    "$DOTNET_HOME_DIR/dotnet" "$MUTDAFNY_HOME_DIR/dafny/Binaries/Dafny.dll" verify "$INPUT_FILE_PATH" \
+      --allow-warnings --solver-path "$MUTDAFNY_HOME_DIR/dafny/Binaries/z3" \
+      --plugin "$MUTDAFNY_HOME_DIR/mutdafny/bin/Debug/net8.0/mutdafny.dll","analyze $uri" > "$tmp_log_file" 2>&1
     end=$(date +%s%3N)
   else
     start=$(date +%s%3N)
@@ -136,18 +144,18 @@ cd "$OUTPUT_DIR_PATH"
   fi
 
   if [ "$BENCHMARK_NAME" == "AWS" ]; then
-    program_name=$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/aws/||")
+    program_name=$(echo $INPUT_FILE_PATH | sed "s|.*/aws/||")
   elif [ "$BENCHMARK_NAME" == "Consensys" ]; then
-    program_name=$(echo $INPUT_FILE_PATH | sed "s|.dfy$||g" | sed "s|.*/consensys/||")
+    program_name=$(echo $INPUT_FILE_PATH | sed "s|.*/consensys/||")
   else
     program_name=$(basename "$INPUT_FILE_PATH" .dfy)
   fi
 
   data_file="data.csv"
   echo "benchmark_name,program_name,method_name,start_pos,end_pos,num_pre,num_post" > "$data_file" || die "[ERROR] Failed to create $OUTPUT_DIR_PATH/$data_file!"
-  tail -n +2 "$methods_file" | while IFS= read -r line; do
+  cat "$methods_file" | while IFS= read -r line; do
     echo "$BENCHMARK_NAME,$program_name,$line"
-  done > "$data_file"
+  done >> "$data_file"
   [ -s "$data_file" ] || die "[ERROR] $OUTPUT_DIR_PATH/$data_file does not exist or it is empty!"
 
   elapsed_time_file="elapsed-time.csv"
