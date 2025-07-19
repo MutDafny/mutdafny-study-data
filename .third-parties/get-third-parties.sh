@@ -149,6 +149,73 @@ cd "$CONSENSYS_HOME_DIR"
 popd > /dev/null 2>&1
 
 #
+# Get MutDafny
+#
+
+echo ""
+echo "Setting up MutDafny..."
+
+MUTDAFNY_HOME_DIR="$SCRIPT_DIR/mutdafny"
+
+# Remove any previous directory
+rm -rf "$MUTDAFNY_HOME_DIR"
+
+git clone --recursive https://github.com/MutDafny/mutdafny.git "$MUTDAFNY_HOME_DIR"
+if [ "$?" -ne "0" ] || [ ! -d "$MUTDAFNY_HOME_DIR" ]; then
+  die "[ERROR] Failed to clone MutDafny's repository!"
+fi
+
+pushd . > /dev/null 2>&1
+cd "$MUTDAFNY_HOME_DIR"
+  # Switch to latest commit/version
+  # TODO git checkout ????? || die "[ERROR] Failed to checkout ?????!"
+
+  # Build [Dafny](https://dafny.org)'s submodule
+  pushd . > /dev/null 2>&1
+  cd dafny   || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny directory!"
+    # Build it
+    make exe || die "[ERROR] Failed to build Dafny's!"
+    # Sanity check
+    dotnet "Binaries/Dafny.dll" --version || die "[ERROR] Dafny is not correctly installed!"
+  popd > /dev/null 2>&1
+
+  # Get [Z3](https://github.com/Z3Prover/z3)
+  pushd . > /dev/null 2>&1
+  cd dafny/Binaries || die "[ERROR] There is no $MUTDAFNY_HOME_DIR/dafny/Binaries directory!"
+    Z3_VERSION="4.12.6"
+    Z3_BIN_FILE="z3-$Z3_VERSION"
+    Z3_ZIP_FILE="z3-$Z3_VERSION-x64-ubuntu-22.04-bin.zip"
+    Z3_URL="https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2024-04-10/$Z3_ZIP_FILE"
+
+    # Remove any previous file or directory
+    rm -f "$Z3_BIN_FILE" "$Z3_ZIP_FILE"
+
+    # Get distribution file
+    wget -np -nv "$Z3_URL" -O "$Z3_ZIP_FILE"
+    if [ "$?" -ne "0" ] || [ ! -s "$Z3_ZIP_FILE" ]; then
+      die "[ERROR] Failed to download $Z3_URL!"
+    fi
+
+    # Extract it
+    unzip "$Z3_ZIP_FILE" || die "[ERROR] Failed to extract $Z3_ZIP_FILE!"
+    [ -s "$Z3_BIN_FILE" ] || die "[ERROR] $Z3_BIN_FILE does not exist or it is empty!"
+
+    # Rename it and set its permissions
+    mv "$Z3_BIN_FILE" "z3"
+    chmod +x "z3"
+  popd > /dev/null 2>&1
+
+  # Build [MutDafny](https://github.com/MutDafny/mutdafny)
+  pushd . > /dev/null 2>&1
+  cd mutdafny
+    # Build it
+    dotnet build || die "[ERROR] Failed to build MutDafny!"
+    # Sanity check
+    [ -s "bin/Debug/net8.0/mutdafny.dll" ] || die "[ERROR] MutDafny is not correctly installed!"
+  popd > /dev/null 2>&1
+popd > /dev/null 2>&1
+
+#
 # R packages
 #
 
