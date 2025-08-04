@@ -9,7 +9,7 @@
 # Usage:
 # gen-mut-jobs.sh
 #   [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>]
-#    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV>
+#    --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values AOR|ROR|COR|LOR|SOR|BBR|AOI|COI|LOI|AOD|COD|LOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV>
 #    --scan_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan>
 #   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>]
 #   [help]
@@ -40,7 +40,7 @@ CONSENSYS_HOME_DIR="$THIRD_PARTIES_DIR/consensys"
 
 USAGE="Usage: ${BASH_SOURCE[0]} \
   [--input_file_path <full path, e.g., $SCRIPT_DIR/../../subjects/data/generated/subjects-whitelist.csv (by default)>] \
-   --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values BOR|BBR|UOI|UOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV> \
+   --mutation_operators <set of mutation operator(s) one or more, separated by ',', possible values AOR|ROR|COR|LOR|SOR|BBR|AOI|COI|LOI|AOD|COD|LOD|LVR|EVR|VER|LSR|LBI|MRR|MAP|MNR|MCR|MVR|SAR|CIR|CBR|CBE|TAR|DCR|SDL|VDL|SLD|ODL|THI|THD|AMR|MMR|FAR|PRV|SWS|SWV> \
    --scan_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/scan> \
   [--output_dir_path <full path, e.g., $SCRIPT_DIR/../data/generated/mut (by default)>] \
   [help]"
