@@ -1,0 +1,54 @@
+// Dafny_tmp_tmpmvs2dmry_examples1.dfy
+
+method Abs(x: int) returns (y: int)
+  ensures y >= 0
+  ensures x >= 0 ==> x == y
+  ensures x < 0 ==> -x == y
+  ensures y == abs(x)
+  decreases x
+{
+  if x < 0 {
+    return -x;
+  } else {
+    return x;
+  }
+}
+
+function abs(x: int): int
+  decreases x
+{
+  if x > 0 then
+    x
+  else
+    -x
+}
+
+method Testing()
+{
+  var v := Abs(-3);
+  assert v >= 0;
+  assert v == 3;
+}
+
+method MultiReturn(x: int, y: int)
+    returns (more: int, less: int)
+  requires y >= 0
+  ensures less <= x <= more
+  decreases x, y
+{
+  more := x + y;
+  less := x - y;
+}
+
+method Max(x: int, y: int) returns (a: int)
+  ensures a == x || a == y
+  ensures x > y ==> a == x
+  ensures x <= y ==> a == y
+  decreases x, y
+{
+  if x > y {
+    a := 0;
+  } else {
+    a := y;
+  }
+}

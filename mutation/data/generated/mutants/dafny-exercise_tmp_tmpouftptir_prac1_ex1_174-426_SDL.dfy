@@ -1,0 +1,16 @@
+// dafny-exercise_tmp_tmpouftptir_prac1_ex1.dfy
+
+predicate acheck(a: array<int>, n: int)
+  requires n >= 1
+  reads a
+  decreases {a}, a, n
+{
+  a.Length % 2 == 0 &&
+  forall i: int {:trigger a[i]} :: 
+    0 <= i < a.Length ==>
+      if i % n == 0 then a[i] == 0 else a[i] != 0
+}
+
+method Main()
+{
+}

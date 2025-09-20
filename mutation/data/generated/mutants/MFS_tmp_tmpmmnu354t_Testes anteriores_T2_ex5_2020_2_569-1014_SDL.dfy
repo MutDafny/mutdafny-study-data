@@ -1,0 +1,26 @@
+// MFS_tmp_tmpmmnu354t_Testes anteriores_T2_ex5_2020_2.dfy
+
+method leq(a: array<int>, b: array<int>) returns (result: bool)
+  ensures result <==> (a.Length <= b.Length && a[..] == b[..a.Length]) || exists k: int {:trigger b[k]} {:trigger a[k]} {:trigger b[..k]} {:trigger a[..k]} :: 0 <= k < a.Length && k < b.Length && a[..k] == b[..k] && a[k] < b[k]
+  decreases a, b
+{
+  var i := 0;
+  while i < a.Length && i < b.Length
+    invariant 0 <= i <= a.Length && 0 <= i <= b.Length
+    invariant a[..i] == b[..i]
+    decreases a.Length - i
+  {
+    if a[i] < b[i] {
+      return true;
+    } else if a[i] > b[i] {
+      return false;
+    } else {
+      i := i + 1;
+    }
+  }
+  return a.Length <= b.Length;
+}
+
+method testLeq()
+{
+}

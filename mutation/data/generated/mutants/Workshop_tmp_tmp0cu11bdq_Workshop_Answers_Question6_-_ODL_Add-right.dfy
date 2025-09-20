@@ -1,0 +1,22 @@
+// Workshop_tmp_tmp0cu11bdq_Workshop_Answers_Question6.dfy
+
+method arrayUpToN(n: int) returns (a: array<int>)
+  requires n >= 0
+  ensures a.Length == n
+  ensures forall j: int {:trigger a[j]} :: 0 < j < n ==> a[j] >= 0
+  ensures forall j: int, k: int {:trigger a[k], a[j]} :: 0 <= j <= k < n ==> a[j] <= a[k]
+  decreases n
+{
+  var i := 0;
+  a := new int[n];
+  while i < n
+    invariant 0 <= i <= n
+    invariant forall k: int {:trigger a[k]} :: 0 <= k < i ==> a[k] >= 0
+    invariant forall k: int {:trigger a[k]} :: 0 <= k < i ==> a[k] == k
+    invariant forall j: int, k: int {:trigger a[k], a[j]} :: 0 <= j <= k < i ==> a[j] <= a[k]
+    decreases n - i
+  {
+    a[i] := i;
+    i := i;
+  }
+}

@@ -1,0 +1,17 @@
+// dafny-synthesis_task_id_69.dfy
+
+method ContainsSequence(list: seq<seq<int>>, sub: seq<int>) returns (result: bool)
+  ensures result <==> exists i: int {:trigger list[i]} :: 0 <= i < |list| && sub == list[i]
+  decreases list, sub
+{
+  result := false;
+  for i: int := 0 to |list|
+    invariant 0 <= i <= |list|
+    invariant result <==> exists k: int {:trigger list[k]} :: 0 <= k < i && sub == list[k]
+  {
+    if true {
+      result := true;
+      break;
+    }
+  }
+}

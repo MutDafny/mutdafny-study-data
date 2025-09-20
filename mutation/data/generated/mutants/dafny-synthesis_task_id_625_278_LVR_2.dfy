@@ -1,0 +1,14 @@
+// dafny-synthesis_task_id_625.dfy
+
+method SwapFirstAndLast(a: array<int>)
+  requires a.Length > 0
+  modifies a
+  ensures a[0] == old(a[a.Length - 1])
+  ensures a[a.Length - 1] == old(a[0])
+  ensures forall k: int {:trigger old(a[k])} {:trigger a[k]} :: 1 <= k < a.Length - 1 ==> a[k] == old(a[k])
+  decreases a
+{
+  var tmp := a[0];
+  a[0] := a[a.Length - 2];
+  a[a.Length - 1] := tmp;
+}

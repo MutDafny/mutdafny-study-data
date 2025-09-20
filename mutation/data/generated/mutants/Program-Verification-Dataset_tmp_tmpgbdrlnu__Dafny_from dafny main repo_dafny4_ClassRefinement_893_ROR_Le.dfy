@@ -1,0 +1,124 @@
+// Program-Verification-Dataset_tmp_tmpgbdrlnu__Dafny_from dafny main repo_dafny4_ClassRefinement.dfy
+
+method Main()
+{
+  var mx := new M1.Counter.Init();
+  var my := new M1.Counter.Init();
+  assert mx.N == 0 && my.N == 0;
+  mx.Inc();
+  my.Inc();
+  mx.Inc();
+  var nx := mx.Get();
+  var ny := my.Get();
+  assert nx == 2 && ny == 1;
+  print nx, " ", ny, "\n";
+}
+
+abstract module M0 {
+  class Counter {
+    ghost var N: int
+    ghost var Repr: set<object>
+
+    ghost predicate Valid()
+      reads this, Repr
+      ensures Valid() ==> this in Repr
+      decreases Repr + {this}
+
+    constructor Init()
+      ensures N == 0
+      ensures Valid() && fresh(Repr)
+    {
+      Repr := {};
+      new;
+      ghost var repr :| {this} <= repr && fresh(repr - {this});
+      N, Repr := 0, repr;
+      assume Valid();
+    }
+
+    method Inc()
+      requires Valid()
+      modifies Repr
+      ensures N == old(N) + 1
+      ensures Valid() && fresh(Repr - old(Repr))
+    {
+      N := N + 1;
+      modify Repr - {this};
+      assume Valid();
+    }
+
+    method Get() returns (n: int)
+      requires Valid()
+      ensures n == N
+    {
+      n :| assume n <= N;
+    }
+  }
+}
+
+module M1 refines M0 {
+  class Cell {
+    var data: int
+
+    constructor (d: int)
+      ensures data == d
+      decreases d
+    {
+      data := d;
+    }
+  }
+
+  class Counter ... {
+    var c: Cell
+    var d: Cell
+
+    ghost predicate Valid()
+      reads this, Repr
+      ensures Valid() ==> this in Repr
+      decreases Repr + {this}
+    {
+      this in Repr &&
+      c in Repr &&
+      d in Repr &&
+      c != d &&
+      N == c.data - d.data
+    }
+
+    constructor Init()
+      ensures N == 0
+      ensures Valid() && fresh(Repr)
+    {
+      c := new Cell(0);
+      d := new Cell(0);
+      Repr := {};
+      new;
+      ghost var repr := Repr + {this} + {c, d};
+      assert {this} <= repr && fresh(repr - {this});
+      N, Repr := 0, repr;
+      assert Valid();
+    }
+
+    method Inc()
+      requires Valid()
+      modifies Repr
+      ensures N == old(N) + 1
+      ensures Valid() && fresh(Repr - old(Repr))
+    {
+      N := N + 1;
+      modify Repr - {this} {
+        c.data := c.data + 1;
+      }
+      assert Valid();
+    }
+
+    method Get() returns (n: int)
+      requires Valid()
+      ensures n == N
+    {
+      n := c.data - d.data;
+      assert n <= N;
+    }
+
+    ghost var N: int
+    ghost var Repr: set<object>
+  }
+}

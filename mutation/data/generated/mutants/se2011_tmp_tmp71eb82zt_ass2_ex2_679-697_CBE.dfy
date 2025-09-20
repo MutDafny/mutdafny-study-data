@@ -1,0 +1,27 @@
+// se2011_tmp_tmp71eb82zt_ass2_ex2.dfy
+
+method SecondLargest(a: array<int>) returns (seclar: int)
+  requires a.Length > 0
+  decreases a
+{
+  seclar := a[0];
+}
+
+method Main()
+{
+  var a: array<int> := new int[] [1];
+  assert a[0] == 1;
+  var x: int := SecondLargest(a);
+  var b: array<int> := new int[] [9, 1];
+  assert b[0] == 9 && b[1] == 1;
+  x := SecondLargest(b);
+  var c: array<int> := new int[] [1, 9];
+  assert c[0] == 1 && c[1] == 9;
+  x := SecondLargest(c);
+  var d: array<int> := new int[] [2, 42, -4, 123, 42];
+  assert d[0] == 2 && d[1] == 42 && d[2] == -4 && d[3] == 123 && d[4] == 42;
+  x := SecondLargest(d);
+  var e: array<int> := new int[] [1, 9, 8];
+  assert e[0] == 1 && e[1] == 9 && e[2] == 8;
+  x := SecondLargest(e);
+}
