@@ -79,7 +79,7 @@ total_gen_times_df <- df %>%
     total_mut_time = sum(runtime)
   ) %>%
   # Join with scan_times
-  dplyr::left_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
+  dplyr::inner_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
   # Calculate total runtime
   dplyr::mutate(
     total_runtime = total_mut_time + scan_time * 0.001
@@ -148,7 +148,7 @@ total_times_df <- df %>%
     total_mut_time = sum(mut_time)
   ) %>%
   # Join with the scan_time data
-  dplyr::left_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
+  dplyr::inner_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
   # Calculate total runtime
   dplyr::mutate(
     total_runtime = total_mut_time + scan_time * 0.001
@@ -198,7 +198,7 @@ plugin_times_df <- df %>%
     total_mut_time = sum(mut_plugin_time)
   ) %>%
   # Join with the scan_time data
-  dplyr::left_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
+  dplyr::inner_join(scan_times_df, by = c("benchmark_name", "program_name")) %>%
   # Calculate total runtime
   dplyr::mutate(
     total_runtime = total_mut_time + plugin_time * 0.001
@@ -229,7 +229,7 @@ combined_df <- bind_rows(
   total_times_df %>% mutate(type = "Total")
 ) %>%
 mutate(type = factor(
-  type, 
+  type,
   levels = c("Plugin", "Mutant generation", "Mutation analysis", "Total"),
   ordered = TRUE
 ))
@@ -239,7 +239,7 @@ global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$tot
 global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime), max(mutants_verif_times$total_runtime), max(total_times_df$total_runtime))
 
 # Create combined plot
-p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) + 
+p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
   geom_boxplot() +
   coord_flip() +
   scale_y_log10(
@@ -248,7 +248,7 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
     limits = c(global_min, global_max)  # Ensure same scale for both
   ) +
   labs(
-    x = '', 
+    x = '',
     y = 'Runtime (seconds, log10 scale)',
     fill = 'Type'
   ) +
@@ -269,27 +269,27 @@ total_stats <- total_times_df$total_runtime
 # Add text annotations
 p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
            label = paste0(
-              'Plugin time\n',
-             'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(plugin_stats), 2)), '\n',
-             '\n',
+             'Total time\n',
+             'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(total_stats), 2)), '\n',
+              '\n',
+              'Mutation analysis time\n',
+             'Median = ', sprintf('%.2f', round(median(mut_verif_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(mut_verif_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(mut_verif_stats), 2)), '\n',
+              '\n',
              'Generation time\n',
              'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
              'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
              'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n',
              '\n',
-              'Mutation analysis time\n',
-             'Median = ', sprintf('%.2f', round(median(mut_verif_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(mut_verif_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(mut_verif_stats), 2)), '\n',
-             '\n',
-             'Total time\n',
-             'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(total_stats), 2))
+             'Plugin time\n',
+             'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
+             'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
+             'Max = ', sprintf('%.2f', round(max(plugin_stats), 2))
            ),
-           size = 3, color = 'black')
+           size = 3.7, color = 'black')
 
 # Print plot
 print(p)
@@ -319,7 +319,7 @@ operator_times_df <- df %>%
     num_mutants = n()
   ) %>%
   # Join with scan_times
-  dplyr::left_join(scan_time_components_df, by = c("benchmark_name", "program_name")) %>%
+  dplyr::inner_join(scan_time_components_df, by = c("benchmark_name", "program_name")) %>%
   # Calculate total runtime
   dplyr::mutate(
     total_runtime = total_mut_time + (parsing_time + plugin_time + resolution_time + verification_time) * 0.001,
