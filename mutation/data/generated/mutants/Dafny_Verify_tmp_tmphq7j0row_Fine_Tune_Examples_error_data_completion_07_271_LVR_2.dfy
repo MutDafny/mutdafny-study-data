@@ -1,0 +1,25 @@
+// Dafny_Verify_tmp_tmphq7j0row_Fine_Tune_Examples_error_data_completion_07.dfy
+
+method main(n: int) returns (a: int, b: int)
+  requires n >= 0
+  ensures a + b == 3 * n
+  decreases n
+{
+  var i: int := 0;
+  a := 0;
+  b := 0;
+  while i < n
+    invariant 0 <= i <= n
+    invariant a + b == 3 * i
+    decreases n - i
+  {
+    if * {
+      a := a + 2;
+      b := b + 2;
+    } else {
+      a := a + 2;
+      b := b + 1;
+    }
+    i := i + 1;
+  }
+}

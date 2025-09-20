@@ -295,6 +295,12 @@ Rscript collect-data.R \
   "$(pwd)/../../mutation/data/generated/mut-data.csv"
 ```
 
+4. Collect the mutants in a single directory.
+
+```bash
+find "$(pwd)/mutation/data/generated/mut/mutants/" -name "*.dfy" -type f -exec cp {} "$(pwd)mutation/data/generated/mutants/" \;
+```
+
 ### 3. Data analysis
 
 1. Plot the distribution number of mutants per mutation operator. The [`mutation/statistics/mutants.R`](mutation/statistics/mutants.R) generates one PDF file in the provided directory:

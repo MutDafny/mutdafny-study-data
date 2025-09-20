@@ -1,0 +1,31 @@
+// Clover_selectionsort.dfy
+
+method SelectionSort(a: array<int>)
+  modifies a
+  ensures forall i: int, j: int {:trigger a[j], a[i]} :: 0 <= i < j < a.Length ==> a[i] <= a[j]
+  ensures multiset(a[..]) == old(multiset(a[..]))
+  decreases a
+{
+  var n := 0;
+  while n != a.Length
+    invariant 0 <= n <= a.Length
+    invariant forall i: int, j: int {:trigger a[j], a[i]} :: 0 <= i < n <= j < a.Length ==> a[i] <= a[j]
+    invariant forall i: int, j: int {:trigger a[j], a[i]} :: 0 <= i < j < n ==> a[i] <= a[j]
+    invariant multiset(a[..]) == old(multiset(a[..]))
+    decreases if n <= a.Length then a.Length - n else n - a.Length
+  {
+    var mindex, m := n, n + 1;
+    while m != a.Length
+      invariant n <= mindex < m <= a.Length
+      invariant forall i: int {:trigger a[i]} :: n <= i < m ==> a[mindex] <= a[i]
+      decreases if m <= a.Length then a.Length - m else m - a.Length
+    {
+      if a[m] < a[mindex] {
+        mindex := m;
+      }
+      m := m + 1;
+    }
+    a[n], a[mindex] := a[mindex], a[n];
+    n := -n + 1;
+  }
+}

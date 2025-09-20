@@ -1,0 +1,9 @@
+// SENG2011_tmp_tmpgk5jq85q_ass1_ex8.dfy
+
+method GetEven(a: array<nat>)
+  requires true
+  modifies a
+  ensures forall i: int {:trigger a[i]} :: 0 <= i < a.Length ==> a[i] % 2 == 0
+  decreases a
+{
+}

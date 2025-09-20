@@ -1,0 +1,15 @@
+// Clover_triple2.dfy
+
+method Triple(x: int) returns (r: int)
+  ensures r == 3 * x
+  decreases x
+{
+  if {
+    case x < 18 =>
+      var a := 2 * x;
+      r := a / 2;
+    case 0 <= x =>
+      var y := 2 * x;
+      r := x + y;
+  }
+}
