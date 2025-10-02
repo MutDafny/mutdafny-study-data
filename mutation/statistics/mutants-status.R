@@ -27,6 +27,13 @@ OUTPUT_DIR_PATH <- args[2]
 
 # ------------------------------------------------------------------------- Main
 
+# Division between existing and new operators
+existing_operators <- c("AMR", "AOD", "AOI", "AOR", "BBR", "CBR", "CIR", "COD", "COI", "COR", 
+  "EVR", "LBI", "LOD", "LOI", "LOR", "LSR", "LVR", "MAP", "MMR", "MNR", "MRR", "ODL", "PRV", 
+  "ROR", "SDL", "SLD", "SOR", "THI", "THD", "VDL"
+)
+new_operators <- c("CBE", "DCR", "FAR", "MCR", "MVR", "SAR", "SWS", "SWV", "TAR", "VER")
+
 # Load data
 df <- load_CSV(DATA_FILE_PATH)
 
@@ -39,9 +46,16 @@ sink(OUTPUT_FILE_PATH, append=FALSE, split=TRUE)
 # Columns
 cat('\\begin{tabular}{@{}lrrrrr@{}} \\toprule', '\n', sep='')
 # Header
-cat('\\textbf{Operator} & \\textbf{\\# Mutants} & \\textbf{\\# Killed} & \\textbf{\\# Survived} & \\textbf{\\# Invalid} & \\textbf{\\# Timeout}', ' \\\\ \\midrule', '\n', sep='')
+cat('\\textbf{Op.} & \\textbf{\\# Mut} & \\textbf{\\# Killed} & \\textbf{\\# Survived} & \\textbf{\\# Invalid} & \\textbf{\\# Timeout}', ' \\\\ \\midrule', '\n', sep='')
+
 # Body
-for (operator in (sort(unique(df$'mutation_operator')))) {
+
+# Ensures correct values for operators with no mutants
+safe_percentage <- function(part, total) {
+  if (total == 0) 0 else part / total * 100.0
+}
+
+build_row <- function(operator) {
   operator_mutants <- df[df$'mutation_operator' == operator, ]
   cat(operator)
 
@@ -49,47 +63,68 @@ for (operator in (sort(unique(df$'mutation_operator')))) {
   cat(' & ', format(num_mutants, scientific=FALSE, big.mark=',', small.mark=','), sep='')
 
   num_killed <- nrow(operator_mutants[operator_mutants$'status' == 'killed', ])
-  per_killed <- num_killed / num_mutants * 100.0
+  per_killed <- safe_percentage(num_killed, num_mutants)
   cat(' & ', format(num_killed, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_killed, 2)), '\\%)', sep='')
 
   num_survived <- nrow(operator_mutants[operator_mutants$'status' == 'survived', ])
-  per_survived <- num_survived / num_mutants * 100.0
+  per_survived <- safe_percentage(num_survived, num_mutants)
   cat(' & ', format(num_survived, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_survived, 2)), '\\%)', sep='')
 
   num_invalid <- nrow(operator_mutants[operator_mutants$'status' == 'invalid', ])
-  per_invalid <- num_invalid / num_mutants * 100.0
+  per_invalid <- safe_percentage(num_invalid, num_mutants)
   cat(' & ', format(num_invalid, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_invalid, 2)), '\\%)', sep='')
 
   num_timeout <- nrow(operator_mutants[operator_mutants$'status' == 'timeout', ])
+  per_timeout <- safe_percentage(num_timeout, num_mutants)
+  cat(' & ', format(num_timeout, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_timeout, 2)), '\\%)', sep='')
+
+  cat(' \\\\', '\n', sep='')
+}
+
+build_total_row <- function(df) {
+  num_mutants <- nrow(df)
+  cat(' & ', format(num_mutants, scientific=FALSE, big.mark=',', small.mark=','), sep='')
+
+  num_killed <- nrow(df[df$'status' == 'killed', ])
+  per_killed <- num_killed / num_mutants * 100.0
+  cat(' & ', format(num_killed, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_killed, 2)), '\\%)', sep='')
+
+  num_survived <- nrow(df[df$'status' == 'survived', ])
+  per_survived <- num_survived / num_mutants * 100.0
+  cat(' & ', format(num_survived, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_survived, 2)), '\\%)', sep='')
+
+  num_invalid <- nrow(df[df$'status' == 'invalid', ])
+  per_invalid <- num_invalid / num_mutants * 100.0
+  cat(' & ', format(num_invalid, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_invalid, 2)), '\\%)', sep='')
+
+  num_timeout <- nrow(df[df$'status' == 'timeout', ])
   per_timeout <- num_timeout / num_mutants * 100.0
   cat(' & ', format(num_timeout, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_timeout, 2)), '\\%)', sep='')
 
   cat(' \\\\', '\n', sep='')
 }
+
+for (operator in existing_operators) {
+  build_row(operator)
+}
+
 cat('\\midrule', '\n', sep='')
 cat('\\textit{Total}')
+existing_operator_mutants <- df[df$'mutation_operator' %in% existing_operators, ]
+build_total_row(existing_operator_mutants)
+cat('\\midrule', '\n', sep='')
 
-num_mutants <- nrow(df)
-cat(' & ', format(num_mutants, scientific=FALSE, big.mark=',', small.mark=','), sep='')
+for (operator in new_operators) {
+  build_row(operator)
+}
 
-num_killed <- nrow(df[df$'status' == 'killed', ])
-per_killed <- num_killed / num_mutants * 100.0
-cat(' & ', format(num_killed, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_killed, 2)), '\\%)', sep='')
-
-num_survived <- nrow(df[df$'status' == 'survived', ])
-per_survived <- num_survived / num_mutants * 100.0
-cat(' & ', format(num_survived, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_survived, 2)), '\\%)', sep='')
-
-num_invalid <- nrow(df[df$'status' == 'invalid', ])
-per_invalid <- num_invalid / num_mutants * 100.0
-cat(' & ', format(num_invalid, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_invalid, 2)), '\\%)', sep='')
-
-num_timeout <- nrow(df[df$'status' == 'timeout', ])
-per_timeout <- num_timeout / num_mutants * 100.0
-cat(' & ', format(num_timeout, scientific=FALSE, big.mark=',', small.mark=','), ' (', sprintf('%.2f', round(per_timeout, 2)), '\\%)', sep='')
-
-cat(' \\\\', '\n', sep='')
-
+cat('\\midrule', '\n', sep='')
+cat('\\textit{Total}') 
+new_operator_mutants <- df[df$'mutation_operator' %in% new_operators, ]
+build_total_row(new_operator_mutants)
+cat('\\midrule', '\n', sep='')
+cat('\\textit{Overall Total}')
+build_total_row(df)
 cat('\\bottomrule', '\n', sep='')
 cat('\\end{tabular}', '\n', sep='')
 sink()
