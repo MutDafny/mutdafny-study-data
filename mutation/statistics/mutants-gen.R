@@ -219,7 +219,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-p
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=7, height=5)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=5)
 
 # Prepare the data for combined plot
 combined_df <- bind_rows(
@@ -245,7 +245,7 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
   scale_y_log10(
     breaks = scales::log_breaks(base = 10, n = 12),
     labels = scales::label_comma(),
-    limits = c(global_min, global_max)  # Ensure same scale for both
+    limits = c(global_min, global_max * 4)  # Ensure same scale for both
   ) +
   labs(
     x = '',
