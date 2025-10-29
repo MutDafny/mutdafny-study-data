@@ -135,7 +135,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-mutation-
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=6, height=2.5)
 
 # Compute kill ratio per program
 kill_ratios <- df %>%
@@ -150,6 +150,7 @@ kill_ratios <- df %>%
 # Calculate mean, median, and max mutation score
 mean_score   <- mean(kill_ratios$'score')
 median_score <- median(kill_ratios$'score')
+standard_deviation <- sd(kill_ratios$'score')
 
 print(summary(kill_ratios$'score'))
 print(kill_ratios[kill_ratios$'score' == min(kill_ratios$'score'), ])
@@ -163,13 +164,26 @@ p <- p + coord_flip()
 p <- p + labs(x='', y='% Mutation Score') +
   scale_y_continuous(breaks=seq(from=0, to=100, by=10))
 # Remove axis
-p <- p + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
+p <- p + theme(
+  axis.title.y = element_blank(), 
+  axis.text.y = element_blank(), 
+  axis.ticks.y = element_blank(),
+  axis.text.x = element_text(size = 14), 
+  axis.title.x = element_text(size = 14),
+)
 # Add text values
-p <- p + annotate('text', x=Inf, y=0, hjust=0, vjust=1.5,
+p <- p + annotate('text', x=Inf, y=0, hjust=0.18, vjust=1,
            label=paste0(#
-             'Median = ', sprintf('%.2f', round(median_score, 2)), '%', '\n',
-             'Mean = ', sprintf('%.2f', round(mean_score, 2)), '%'),
-           size=4, color='black')
+             'Median = ', sprintf('%.2f', round(median_score, 2)), '%', '\n'),
+           size=4.5, color='black')
+p <- p + annotate('text', x=Inf, y=0, hjust=0.2, vjust=1.6,
+           label=paste0(#
+            'Mean = ', sprintf('%.2f', round(mean_score, 2)), '%', '\n'),
+           size=4.5, color='black')
+p <- p + annotate('text', x=Inf, y=0, hjust=0.11, vjust=4.7,
+           label=paste0(#
+             'Standard Deviation = ', sprintf('%.2f', round(standard_deviation, 2)), '%'),
+           size=4.5, color='black')
 # Print plot
 print(p)
 
