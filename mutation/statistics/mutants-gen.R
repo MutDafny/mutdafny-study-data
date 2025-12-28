@@ -219,7 +219,7 @@ OUTPUT_FILE_PATH <- paste0(OUTPUT_DIR_PATH, '/', 'distribution-overall-runtime-p
 
 # Remove any existing output file and create a new one
 unlink(OUTPUT_FILE_PATH)
-pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=5)
+pdf(file=OUTPUT_FILE_PATH, family='Helvetica', width=10, height=9.2)
 
 # Prepare the data for combined plot
 combined_df <- bind_rows(
@@ -238,14 +238,17 @@ mutate(type = factor(
 global_min <- min(min(plugin_times_df$total_runtime), min(total_gen_times_df$total_runtime), min(mutants_verif_times$total_runtime), min(total_times_df$total_runtime))
 global_max <- max(max(plugin_times_df$total_runtime), max(total_gen_times_df$total_runtime), max(mutants_verif_times$total_runtime), max(total_times_df$total_runtime))
 
+custom_breaks <- c(0.1, 0.3, 1, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000, 100000, 300000, 1000000)
+custom_labels <- c("0.1", "0.3", "1", "3", "10", "30", "100", "300", "1,000", "3,000", "10,000", "30,000", "100,000", "300,000", "1,000,000")
+
 # Create combined plot
 p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
   geom_boxplot() +
   coord_flip() +
   scale_y_log10(
-    breaks = scales::log_breaks(base = 10, n = 12),
-    labels = scales::label_comma(),
-    limits = c(global_min, global_max * 4)  # Ensure same scale for both
+    breaks = custom_breaks,
+    labels = custom_labels,
+    limits = c(global_min, global_max * 17)
   ) +
   labs(
     x = '',
@@ -256,9 +259,14 @@ p <- ggplot(combined_df, aes(x = type, y = total_runtime, fill = type)) +
     axis.title.y = element_blank(),
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank(),
-    legend.position = "bottom"
+    legend.position = "bottom",
+    axis.text.x = element_text(size = 18), 
+    axis.title.x = element_text(size = 22),
+    legend.text = element_text(size = 22),
+    legend.title = element_text(size = 22)
   ) +
-  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown", "Mutation analysis" = "mediumseagreen", "Total" = "cornflowerblue"))
+  scale_fill_manual(values = c("Plugin" = "goldenrod", "Mutant generation" = "sandybrown", "Mutation analysis" = "mediumseagreen", "Total" = "cornflowerblue")) +
+  guides(x = guide_axis(n.dodge = 2))
 
 # Calculate statistics for annotation
 plugin_stats <- plugin_times_df$total_runtime
@@ -267,29 +275,29 @@ mut_verif_stats <- mutants_verif_times$total_runtime
 total_stats <- total_times_df$total_runtime
 
 # Add text annotations
-p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1,
+p <- p + annotate('text', x = Inf, y = Inf, hjust = 1, vjust = 1.01,
            label = paste0(
              'Total time\n',
-             'Median = ', sprintf('%.2f', round(median(total_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(total_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(total_stats), 2)), '\n',
+             'Median = ', sprintf('%.1f', round(median(total_stats), 2)), '\n',
+             'Mean = ', sprintf('%.1f', round(mean(total_stats), 2)), '\n',
+             'Max = ', sprintf('%.1f', round(max(total_stats), 2)), '\n',
               '\n',
               'Mutation analysis time\n',
-             'Median = ', sprintf('%.2f', round(median(mut_verif_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(mut_verif_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(mut_verif_stats), 2)), '\n',
+             'Median = ', sprintf('%.1f', round(median(mut_verif_stats), 2)), '\n',
+             'Mean = ', sprintf('%.1f', round(mean(mut_verif_stats), 2)), '\n',
+             'Max = ', sprintf('%.1f', round(max(mut_verif_stats), 2)), '\n',
               '\n',
              'Generation time\n',
-             'Median = ', sprintf('%.2f', round(median(gen_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(gen_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(gen_stats), 2)), '\n',
+             'Median = ', sprintf('%.1f', round(median(gen_stats), 2)), '\n',
+             'Mean = ', sprintf('%.1f', round(mean(gen_stats), 2)), '\n',
+             'Max = ', sprintf('%.1f', round(max(gen_stats), 2)), '\n',
              '\n',
              'Plugin time\n',
-             'Median = ', sprintf('%.2f', round(median(plugin_stats), 2)), '\n',
-             'Mean = ', sprintf('%.2f', round(mean(plugin_stats), 2)), '\n',
-             'Max = ', sprintf('%.2f', round(max(plugin_stats), 2))
+             'Median = ', sprintf('%.1f', round(median(plugin_stats), 2)), '\n',
+             'Mean = ', sprintf('%.1f', round(mean(plugin_stats), 2)), '\n',
+             'Max = ', sprintf('%.1f', round(max(plugin_stats), 2))
            ),
-           size = 3.7, color = 'black')
+           size = 7, color = 'black')
 
 # Print plot
 print(p)
