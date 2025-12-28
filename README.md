@@ -1,4 +1,4 @@
-This artifact, i.e., repository, contains all scripts, data, and instructions required to [repeat and reproduce](https://www.acm.org/publications/policies/artifact-review-and-badging-current) the study '<TBA>'.
+Scripts, data, and instructions required to [repeat and reproduce](https://www.acm.org/publications/policies/artifact-review-and-badging-current) the study presented in [arXiv:2511.15403](https://arxiv.org/abs/2511.15403).
 
 ## Structure
 
