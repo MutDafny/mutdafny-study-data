@@ -5,10 +5,9 @@
 # Usage:
 # Rscript mutants-stat-test.R
 #   <mutation data file path, e.g., ../data/generated/mut-data.csv>
-#   <output dir path, e.g., ../data/generated>
 # ------------------------------------------------------------------------------
 
-# source('../../utils/statistics/utils.R')
+source('../../utils/statistics/utils.R')
 library('dplyr', lib.loc=local_library)
 
 '%!in%' <- function(x,y)!('%in%'(x,y)) # Wrapper to 'not in'
@@ -16,13 +15,12 @@ library('dplyr', lib.loc=local_library)
 # ------------------------------------------------------------------------- Args
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) != 2) {
-  stop('USAGE: Rscript mutants-gen.R <mutation data file path, e.g., ../data/generated/mut-data.csv> <output dir path, e.g., ../data/generated>')
+if (length(args) != 1) {
+  stop('USAGE: Rscript mutants-stat-test.R <mutation data file path, e.g., ../data/generated/mut-data.csv>')
 }
 
 # Args
 DATA_FILE_PATH  <- args[1] # benchmark_name,program_name,mutation_position,mutation_operator,mutation,status,parsing_time,plugin_time,resolution_time,verification_time,run_time
-OUTPUT_DIR_PATH <- args[2]
 
 # ------------------------------------------------------------------------- Main
 
